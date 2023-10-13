@@ -1,5 +1,5 @@
 # fimPrimeiroPeriodo
-Trabalho de conclusão de AEDS primeiro período da faculdade de *Sistemas de Informação* - Unimontes 2/2023
+Trabalho de conclusão de AEDS I - primeiro período da faculdade de *Sistemas de Informação* - Unimontes 2/2023
 
 
 ## Compilação
