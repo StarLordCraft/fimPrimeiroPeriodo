@@ -26,3 +26,6 @@ make
 Observe que você pode alterar o nome do executável e as opções de compilação, incluindo o compilador e a adição de bibliotecas, conforme necessário. Isso pode ser feito no arquivo 
 
 ### `CMakeLists.txt`
+
+## Licença
+ [MIT license](https://opensource.org/licenses/MIT).
