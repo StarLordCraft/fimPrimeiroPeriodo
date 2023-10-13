@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/Heveraldo_Project.dir/src/main.c.o -o Heveraldo_Project  -lncurses 

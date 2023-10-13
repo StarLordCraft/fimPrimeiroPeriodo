@@ -1,0 +1,4 @@
+/media/rafael/Hd1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/Heveraldo_Project.dir
+/media/rafael/Hd1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/run.dir
+/media/rafael/Hd1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/edit_cache.dir
+/media/rafael/Hd1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/rebuild_cache.dir
