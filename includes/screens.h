@@ -1,5 +1,7 @@
 #include "window.h"
 
+typedef void (*Screen)();
+
 Box *initScreen(int borderSize)
 {
     int *windowSizes = getWindowSize();
@@ -8,6 +10,7 @@ Box *initScreen(int borderSize)
     
     return window;
 }
+
 
 void menu()
 {
@@ -18,4 +21,10 @@ void menu()
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
     free(window); free(title);
+}
+
+void *getScreens()
+{
+    static Screen screens[] = {menu};
+    return screens;
 }

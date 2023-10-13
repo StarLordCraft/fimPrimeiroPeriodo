@@ -4,8 +4,6 @@ project(Heveraldo_Project)
 
 set(CMAKE_C_STANDARD 11)
 
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-
 include_directories(./includes)
 
 file(GLOB DEFINITIONS_SOURCES 
