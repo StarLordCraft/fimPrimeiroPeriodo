@@ -115,9 +115,6 @@ Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX
     return box;
 }
 
-void destroyBox(Box *box)
-{ free(box); }
-
 void renderText(unsigned int posX, unsigned int posY, const char *text) 
 { printf("\033[%d;%dH%s", posY, posX, text); }
 

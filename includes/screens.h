@@ -8,6 +8,7 @@ Box *initScreen(int borderSize)
     Box *window = createBox(windowSizes[0], windowSizes[1], 0, 0);
     createBorder(window, borderSize);
     
+    free(windowSizes);
     return window;
 }
 
@@ -21,10 +22,15 @@ void menu()
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
     free(window); free(title);
+    free(titleTextPos);
 }
 
 void *getScreens()
 {
-    static Screen screens[] = {menu};
+    Screen *screens = (Screen*) malloc(sizeof(Screen));
+    screens[0] = menu;
     return screens;
 }
+
+void freeScreens(Screen *screens)
+{ free(screens); }

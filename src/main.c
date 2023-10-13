@@ -4,16 +4,18 @@ int main() {
     configureConsole();
 
     Screen *screens = getScreens();
+    unsigned short appState = 0;
 
     while(TRUE){
         boolean open = handleEvents();
 
-        screens[0]();
+        screens[appState]();
         
         refresh();
         if(!open)break;
     }
 
+    freeScreens(screens);
 
     #ifdef __linux__
         endwin();
