@@ -116,7 +116,16 @@ Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX
 }
 
 void renderText(unsigned int posX, unsigned int posY, const char *text) 
-{ printf("\033[%d;%dH%s", posY, posX, text); }
+{ 
+    #ifdef _WIN32
+        HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+        COORD position = {posX, posY};
+        SetConsoleCursorPosition(console, position);
+        printf("%s", text);
+    #ifdef defined(__linux__)
+        printf("\033[%d;%dH%s", posY, posX, text);
+    #endif 
+}
 
 void createBorder(Box *box, unsigned int borderSize)
 {
