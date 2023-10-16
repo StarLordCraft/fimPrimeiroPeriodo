@@ -7,11 +7,14 @@ int main() {
     unsigned short appState = 0;
 
     while(TRUE){
-        boolean open = handleEvents();
-
         screens[appState]();
+
+        boolean open = handleEvents();
         
         refresh();
+
+        free(screenButtons);
+        
         if(!open)break;
     }
 
