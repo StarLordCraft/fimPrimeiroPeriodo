@@ -6,16 +6,14 @@ int main() {
     Screen *screens = getScreens();
     unsigned short appState = 0;
 
-    while(TRUE){
+    while(isOpen()){
         screens[appState]();
 
-        boolean open = handleEvents();
+        handleEvents();
         
         refresh();
 
-        free(screenButtons);
-        
-        if(!open)break;
+        freeScreenButtons();
     }
 
     freeScreens(screens);
