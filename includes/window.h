@@ -50,9 +50,7 @@ unsigned short numScreenButtons = 0;
  * @return boolean true se estiver rodando false senão
  */
 boolean isOpen()
-{
-    return open;
-}
+{ return open; }
 
 /**
  * @brief define o estado da window
@@ -61,9 +59,7 @@ boolean isOpen()
  * @return void
  */
 void setIsOpen(boolean state)
-{
-    open = state;
-}
+{ open = state; }
 
 /**
  * @brief Reseta o array de botões para receber os botões de uma outra tela.
