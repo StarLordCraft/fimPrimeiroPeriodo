@@ -40,6 +40,113 @@ typedef struct
 } Button;
 
 /**
+ * @brief Calcula o tamanho da janela em termos da quantidade máxima de caracteres visíveis.
+ * 
+ * @return int O tamanho da janela do programa, representado como a quantidade de caracteres visíveis.
+ */
+int *getWindowSize()
+{
+    int *windowSize = (int *)malloc(2 * sizeof(int));
+
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    windowSize[0] = csbi.dwSize.X;
+    windowSize[1] = csbi.dwSize.Y;
+
+#elif defined(__linux__)
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    windowSize[0] = w.ws_col;
+    windowSize[1] = w.ws_row;
+
+#endif
+
+    return windowSize;
+}
+
+/**
+ * @brief Cria uma Box
+ * 
+ * @param width largura da Box
+ * @param height altura da Box
+ * @param startPointX Posicionamento no eixo X da box
+ * @param startPointY Posicionamento no eixo Y da Box
+ * @return Box retorna um elemento renderizável na tela
+*/
+Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX, unsigned int startPointY)
+{
+    Box *box = (Box *)malloc(sizeof(Box));
+
+    box->width = width;
+    box->height = height;
+    box->startPointX = startPointX;
+    box->startPointY = startPointY;
+
+    return box;
+}
+
+/**
+ * @brief Renderiza texto na tela do usuário na coordenada passada
+ * 
+ * @param posX coordenada no eixo X
+ * @param posY coordenada no eixo Y
+ * @param text texto a ser renderizado
+ * 
+ * @return void
+*/
+void renderText(unsigned int posX, unsigned int posY, const char *text)
+{
+#ifdef _WIN32
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD position = {posX, posY};
+    SetConsoleCursorPosition(console, position);
+    printf("%s", text);
+#elif __linux__
+    printf("\033[%d;%dH%s", posY, posX, text);
+#endif
+}
+
+/**
+ * @brief Cria uma borda num determinado elemento
+ * 
+ * @param box que receberá borda
+ * @param borderSize tamanho da borda
+ * @return void
+*/
+void createBorder(Box *box, unsigned int borderSize)
+{
+    if (box->width < 2 * borderSize || box->height < 2 * borderSize)
+        error("Tamanho da borda muito grande para a caixa!\n");
+
+    for (unsigned int y = 0; y < box->height; ++y)
+        for (unsigned int x = 0; x < box->width; ++x)
+            if (x < borderSize || x >= (box->width - borderSize) || y < borderSize || y >= (box->height - borderSize))
+                renderText(x + box->startPointX, y + box->startPointY, "#");
+}
+
+/**
+ * @brief Centraliza um elemento em relação a um contêiner pai, levando em consideração as coordenadas
+ * horizontal e vertical.
+ * 
+ * @param boxRelative O contêiner pai.
+ * @param textLength O tamanho do elemento filho a ser centralizado.
+ * @param horizontal Define se o elemento deve ser centralizado horizontalmente.
+ * @param vertical Define se o elemento deve ser centralizado verticalmente.
+ * 
+ * @return int* Um array contendo as coordenadas x e y que centralizam o elemento.
+ */
+int *getCenterPos(Box *boxRelative, unsigned short textLength, boolean horizontal, boolean vertical)
+{
+    int *positions = (int *)malloc(sizeof(int) * 2);
+
+    positions[0] = horizontal ? (boxRelative->startPointX + (boxRelative->width - textLength) / 2) : 0;
+    positions[1] = vertical ? (boxRelative->startPointY + (boxRelative->height - 1) / 2) : 0;
+
+    return positions;
+}
+
+/**
  *@brief 
  * Aqui armazena todos o botoes da tela, serve pra checagem se algum deles foi apertado ao ser emitido evento de clique
 */
@@ -52,14 +159,14 @@ int numScreenButtons = 0;
  * @param button O botão a ser adicionado ao array.
  * @return void
  */
-void addButtonToScreen(Button button)
+void addButtonToScreen(Button* button)
 {
     screenButtons = (Button *)realloc(screenButtons, (numScreenButtons + 1) * sizeof(Button));
 
     if (screenButtons == NULL)
         error("Falha na alocação de memória.\n");
 
-    screenButtons[numScreenButtons] = button;
+    screenButtons[numScreenButtons] = *button;
     numScreenButtons++;
 }
 
@@ -166,111 +273,4 @@ boolean handleEvents()
     refresh();
     return TRUE;
 #endif
-}
-
-/**
- * @brief Calcula o tamanho da janela em termos da quantidade máxima de caracteres visíveis.
- * 
- * @return int O tamanho da janela do programa, representado como a quantidade de caracteres visíveis.
- */
-int *getWindowSize()
-{
-    int *windowSize = (int *)malloc(2 * sizeof(int));
-
-#ifdef _WIN32
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    windowSize[0] = csbi.dwSize.X;
-    windowSize[1] = csbi.dwSize.Y;
-
-#elif defined(__linux__)
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    windowSize[0] = w.ws_col;
-    windowSize[1] = w.ws_row;
-
-#endif
-
-    return windowSize;
-}
-
-/**
- * @brief Cria uma Box
- * 
- * @param width largura da Box
- * @param height altura da Box
- * @param startPointX Posicionamento no eixo X da box
- * @param startPointY Posicionamento no eixo Y da Box
- * @return Box retorna um elemento renderizável na tela
-*/
-Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX, unsigned int startPointY)
-{
-    Box *box = (Box *)malloc(sizeof(Box));
-
-    box->width = width;
-    box->height = height;
-    box->startPointX = startPointX;
-    box->startPointY = startPointY;
-
-    return box;
-}
-
-/**
- * @brief Renderiza texto na tela do usuário na coordenada passada
- * 
- * @param posX coordenada no eixo X
- * @param posY coordenada no eixo Y
- * @param text texto a ser renderizado
- * 
- * @return void
-*/
-void renderText(unsigned int posX, unsigned int posY, const char *text)
-{
-#ifdef _WIN32
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD position = {posX, posY};
-    SetConsoleCursorPosition(console, position);
-    printf("%s", text);
-#elif __linux__
-    printf("\033[%d;%dH%s", posY, posX, text);
-#endif
-}
-
-/**
- * @brief Cria uma borda num determinado elemento
- * 
- * @param box que receberá borda
- * @param borderSize tamanho da borda
- * @return void
-*/
-void createBorder(Box *box, unsigned int borderSize)
-{
-    if (box->width < 2 * borderSize || box->height < 2 * borderSize)
-        error("Tamanho da borda muito grande para a caixa!\n");
-
-    for (unsigned int y = 0; y < box->height; ++y)
-        for (unsigned int x = 0; x < box->width; ++x)
-            if (x < borderSize || x >= (box->width - borderSize) || y < borderSize || y >= (box->height - borderSize))
-                renderText(x + box->startPointX, y + box->startPointY, "#");
-}
-
-/**
- * @brief Centraliza um elemento em relação a um contêiner pai, levando em consideração as coordenadas
- * horizontal e vertical.
- * 
- * @param boxRelative O contêiner pai.
- * @param textLength O tamanho do elemento filho a ser centralizado.
- * @param horizontal Define se o elemento deve ser centralizado horizontalmente.
- * @param vertical Define se o elemento deve ser centralizado verticalmente.
- * 
- * @return int* Um array contendo as coordenadas x e y que centralizam o elemento.
- */
-int *getCenterPos(Box *boxRelative, unsigned short textLength, boolean horizontal, boolean vertical)
-{
-    int *positions = (int *)malloc(sizeof(int) * 2);
-
-    positions[0] = horizontal ? (boxRelative->startPointX + (boxRelative->width - textLength) / 2) : 0;
-    positions[1] = vertical ? (boxRelative->startPointY + (boxRelative->height - 1) / 2) : 0;
-
-    return positions;
 }
