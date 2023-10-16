@@ -9,6 +9,11 @@
 #include <ncurses.h>
 #endif
 
+
+/// @brief 
+/*
+* Essa struct serve pra criar armazenar e manipular estruturas analogas a div no html
+*/
 typedef struct
 {
     unsigned int width;
@@ -17,7 +22,11 @@ typedef struct
     unsigned int startPointX;
     unsigned int startPointY;
 } Box;
-
+ 
+/**
+ * @brief
+ * Essa struct serve pra criar armazenar e manipular estruturas analogas a button no html
+*/
 typedef struct
 {
     unsigned int width;
@@ -30,24 +39,67 @@ typedef struct
     void (*onClick)(void);
 } Button;
 
+/**
+ *@brief 
+ * Aqui armazena todos o botoes da tela, serve pra checagem se algum deles foi apertado ao ser emitido evento de clique
+*/
 Button *screenButtons = NULL;
 int numScreenButtons = 0;
 
+/**
+ * @brief Adiciona um botão ao array de botões para processar eventos de clique.
+ * 
+ * @param button O botão a ser adicionado ao array.
+ * @return void
+ */
 void addButtonToScreen(Button button)
 {
     screenButtons = (Button *)realloc(screenButtons, (numScreenButtons + 1) * sizeof(Button));
 
     if (screenButtons == NULL)
-    {
-        printf("Falha na alocação de memória.\n");
-        return;
-    }
+        error("Falha na alocação de memória.\n");
 
-    // Adiciona o novo botão
     screenButtons[numScreenButtons] = button;
     numScreenButtons++;
 }
 
+/**
+ * @brief Renderiza um botão na tela e o torna clicável, adicionando-o a um array de botões.
+ * 
+ * @param button O botão a ser renderizado na tela.
+ * @return void
+ */
+void renderButton(Button *button)
+{
+    createBorder(createBox(button->width, button->height, button->startPointX, button->startPointY), 1);
+    int *centerPos = getCenterPos(createBox(button->width, button->height, button->startPointX, button->startPointY), strlen(button->text), 1, 1);
+    renderText(centerPos[0], centerPos[1], button->text);
+
+    addButtonToScreen(button);
+    
+    free(centerPos);
+}
+/**
+ * @brief Testa se um botão foi clicado
+ * 
+ * @param button botão a ser testado
+ * @param mouseX posição X do mouse
+ * @param mouseY posição Y do mouse
+ * @return void
+*/
+void handleButtonEvent(Button *button, int mouseX, int mouseY)
+{
+    if (mouseX >= button->startPointX && mouseX < (button->startPointX + button->width) &&
+        mouseY >= button->startPointY && mouseY < (button->startPointY + button->height))
+        if (button->onClick != NULL)
+            button->onClick();
+}
+
+/**
+ * @brief configura o console para poder receber eventos de clique e eventos de input serem não bloqueantes
+ * 
+ * @return void
+*/
 void configureConsole()
 {
 #ifdef _WIN32
@@ -67,14 +119,11 @@ void configureConsole()
 #endif
 }
 
-void handleButtonEvent(Button *button, int mouseX, int mouseY)
-{
-    if (mouseX >= button->startPointX && mouseX < (button->startPointX + button->width) &&
-        mouseY >= button->startPointY && mouseY < (button->startPointY + button->height))
-        if (button->onClick != NULL)
-            button->onClick();
-}
-
+/**
+ * @brief recebe eventos e computa eles seja clique input de teclado...
+ * 
+ * @return boolean - se deve ou não parar o programa
+*/
 boolean handleEvents()
 {
 #ifdef _WIN32
@@ -119,6 +168,11 @@ boolean handleEvents()
 #endif
 }
 
+/**
+ * @brief Calcula o tamanho da janela em termos da quantidade máxima de caracteres visíveis.
+ * 
+ * @return int O tamanho da janela do programa, representado como a quantidade de caracteres visíveis.
+ */
 int *getWindowSize()
 {
     int *windowSize = (int *)malloc(2 * sizeof(int));
@@ -140,6 +194,15 @@ int *getWindowSize()
     return windowSize;
 }
 
+/**
+ * @brief Cria uma Box
+ * 
+ * @param width largura da Box
+ * @param height altura da Box
+ * @param startPointX Posicionamento no eixo X da box
+ * @param startPointY Posicionamento no eixo Y da Box
+ * @return Box retorna um elemento renderizável na tela
+*/
 Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX, unsigned int startPointY)
 {
     Box *box = (Box *)malloc(sizeof(Box));
@@ -152,6 +215,15 @@ Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX
     return box;
 }
 
+/**
+ * @brief Renderiza texto na tela do usuário na coordenada passada
+ * 
+ * @param posX coordenada no eixo X
+ * @param posY coordenada no eixo Y
+ * @param text texto a ser renderizado
+ * 
+ * @return void
+*/
 void renderText(unsigned int posX, unsigned int posY, const char *text)
 {
 #ifdef _WIN32
@@ -164,6 +236,13 @@ void renderText(unsigned int posX, unsigned int posY, const char *text)
 #endif
 }
 
+/**
+ * @brief Cria uma borda num determinado elemento
+ * 
+ * @param box que receberá borda
+ * @param borderSize tamanho da borda
+ * @return void
+*/
 void createBorder(Box *box, unsigned int borderSize)
 {
     if (box->width < 2 * borderSize || box->height < 2 * borderSize)
@@ -175,6 +254,17 @@ void createBorder(Box *box, unsigned int borderSize)
                 renderText(x + box->startPointX, y + box->startPointY, "#");
 }
 
+/**
+ * @brief Centraliza um elemento em relação a um contêiner pai, levando em consideração as coordenadas
+ * horizontal e vertical.
+ * 
+ * @param boxRelative O contêiner pai.
+ * @param textLength O tamanho do elemento filho a ser centralizado.
+ * @param horizontal Define se o elemento deve ser centralizado horizontalmente.
+ * @param vertical Define se o elemento deve ser centralizado verticalmente.
+ * 
+ * @return int* Um array contendo as coordenadas x e y que centralizam o elemento.
+ */
 int *getCenterPos(Box *boxRelative, unsigned short textLength, boolean horizontal, boolean vertical)
 {
     int *positions = (int *)malloc(sizeof(int) * 2);
