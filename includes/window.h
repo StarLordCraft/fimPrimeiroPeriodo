@@ -15,11 +15,11 @@
  */
 typedef struct
 {
-    unsigned int width;
-    unsigned int height;
+    unsigned short width;
+    unsigned short height;
 
-    unsigned int startPointX;
-    unsigned int startPointY;
+    unsigned short startPointX;
+    unsigned short startPointY;
 } Box;
 
 /**
@@ -28,11 +28,11 @@ typedef struct
  */
 typedef struct
 {
-    unsigned int width;
-    unsigned int height;
+    unsigned short width;
+    unsigned short height;
 
-    unsigned int startPointX;
-    unsigned int startPointY;
+    unsigned short startPointX;
+    unsigned short startPointY;
 
     const char *text;
     void (*onClick)(void);
@@ -41,31 +41,35 @@ typedef struct
 /// @section Global Variables
 boolean open = TRUE;
 Button *screenButtons = NULL;
-int numScreenButtons = 0;
+unsigned short numScreenButtons = 0;
 /// @endparblock end Global Variables
 
 /**
  * @brief checa se a window ta aberta
- * 
+ *
  * @return boolean true se estiver rodando false senão
-*/
+ */
 boolean isOpen()
-{ return open; }
+{
+    return open;
+}
 
 /**
  * @brief define o estado da window
- * 
+ *
  * @param state o novo estado da window
  * @return void
-*/
+ */
 void setIsOpen(boolean state)
-{ open = state; }
+{
+    open = state;
+}
 
 /**
  * @brief Reseta o array de botões para receber os botões de uma outra tela.
- * 
+ *
  * @return void
-*/
+ */
 void freeScreenButtons()
 {
     free(screenButtons);
@@ -77,9 +81,9 @@ void freeScreenButtons()
  *
  * @return int O tamanho da janela do programa, representado como a quantidade de caracteres visíveis.
  */
-int *getWindowSize()
+unsigned short *getWindowSize()
 {
-    int *windowSize = (int *)malloc(2 * sizeof(int));
+    unsigned short *windowSize = (unsigned short *)malloc(2 * sizeof(unsigned short));
 
 #ifdef _WIN32
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -131,7 +135,7 @@ void configureConsole()
  * @param mouseY posição Y do mouse
  * @return void
  */
-void handleButtonEvent(Button *button, int mouseX, int mouseY)
+void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mouseY)
 {
     if (mouseX >= button->startPointX && mouseX < (button->startPointX + button->width) &&
         mouseY >= button->startPointY && mouseY < (button->startPointY + button->height))
@@ -192,7 +196,7 @@ void handleEvents()
  * @param startPointY Posicionamento no eixo Y da Box
  * @return Box retorna um elemento renderizável na tela
  */
-Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX, unsigned int startPointY)
+Box *createBox(unsigned short width, unsigned short height, unsigned short startPointX, unsigned short startPointY)
 {
     Box *box = (Box *)malloc(sizeof(Box));
 
@@ -213,7 +217,7 @@ Box *createBox(unsigned int width, unsigned int height, unsigned int startPointX
  *
  * @return void
  */
-void renderText(unsigned int posX, unsigned int posY, const char *text)
+void renderText(unsigned short posX, unsigned short posY, const char *text)
 {
 #ifdef _WIN32
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -232,13 +236,13 @@ void renderText(unsigned int posX, unsigned int posY, const char *text)
  * @param borderSize tamanho da borda
  * @return void
  */
-void createBorder(Box *box, unsigned int borderSize)
+void createBorder(Box *box, unsigned short borderSize)
 {
     if (box->width < 2 * borderSize || box->height < 2 * borderSize)
         error("Tamanho da borda muito grande para a caixa!\n");
 
-    for (unsigned int y = 0; y < box->height; ++y)
-        for (unsigned int x = 0; x < box->width; ++x)
+    for (unsigned short y = 0; y < box->height; ++y)
+        for (unsigned short x = 0; x < box->width; ++x)
             if (x < borderSize || x >= (box->width - borderSize) || y < borderSize || y >= (box->height - borderSize))
                 renderText(x + box->startPointX, y + box->startPointY, "#");
 }
@@ -254,9 +258,9 @@ void createBorder(Box *box, unsigned int borderSize)
  *
  * @return int* Um array contendo as coordenadas x e y que centralizam o elemento.
  */
-int *getCenterPos(Box *boxRelative, unsigned short textLength, boolean horizontal, boolean vertical)
+unsigned short *getCenterPos(Box *boxRelative, unsigned short textLength, boolean horizontal, boolean vertical)
 {
-    int *positions = (int *)malloc(sizeof(int) * 2);
+    unsigned short *positions = (unsigned short *)malloc(sizeof(unsigned short) * 2);
 
     positions[0] = horizontal ? (boxRelative->startPointX + (boxRelative->width - textLength) / 2) : 0;
     positions[1] = vertical ? (boxRelative->startPointY + (boxRelative->height - 1) / 2) : 0;
@@ -290,7 +294,7 @@ void addButtonToScreen(Button *button)
 void renderButton(Button *button)
 {
     createBorder(createBox(button->width, button->height, button->startPointX, button->startPointY), 1);
-    int *centerPos = getCenterPos(createBox(button->width, button->height, button->startPointX, button->startPointY), strlen(button->text), 1, 1);
+    unsigned short *centerPos = getCenterPos(createBox(button->width, button->height, button->startPointX, button->startPointY), strlen(button->text), TRUE, TRUE);
     renderText(centerPos[0], centerPos[1], button->text);
 
     addButtonToScreen(button);

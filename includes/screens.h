@@ -1,10 +1,10 @@
 #include "window.h"
 
-typedef void (*Screen)();
+typedef void (*RenderScreen)();
 
-Box *initScreen(int borderSize)
+Box *initScreen(unsigned short borderSize)
 {
-    int *windowSizes = getWindowSize();
+    unsigned short *windowSizes = getWindowSize();
     Box *window = createBox(windowSizes[0], windowSizes[1], 0, 0);
     createBorder(window, borderSize);
     
@@ -17,7 +17,7 @@ void menu()
     Box *window = initScreen(1);
     Box *title = createBox(10, 5, getCenterPos(window, 10, TRUE, FALSE)[0], 3);
     createBorder(title, 1);
-    int *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
+    unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
     free(window); free(title);
@@ -26,10 +26,10 @@ void menu()
 
 void *getScreens()
 {
-    Screen *screens = (Screen*) malloc(sizeof(Screen));
+    RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen));
     screens[0] = menu;
     return screens;
 }
 
-void freeScreens(Screen *screens)
+void freeScreens(RenderScreen *screens)
 { free(screens); }
