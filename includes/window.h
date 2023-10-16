@@ -38,10 +38,11 @@ typedef struct
     void (*onClick)(void);
 } Button;
 
-//Global Variables
+/// @section Global Variables
 boolean open = TRUE;
 Button *screenButtons = NULL;
 int numScreenButtons = 0;
+/// @endparblock end Global Variables
 
 /**
  * @brief checa se a window ta aberta
