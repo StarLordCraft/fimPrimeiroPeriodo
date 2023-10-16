@@ -3,8 +3,7 @@
 int main() {
     configureConsole();
 
-    RenderScreen *screens = getScreens();
-    unsigned short appState = 0;
+    RenderScreen *screens = getScreens(); 
 
     while(isOpen()){
         screens[appState]();

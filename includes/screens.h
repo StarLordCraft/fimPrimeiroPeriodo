@@ -2,6 +2,18 @@
 
 typedef void (*RenderScreen)();
 
+typedef enum {
+    MENU,
+}AppState;
+
+AppState appState = MENU;
+
+/***
+ * @brief Uma box que representa a janela inteira
+ *
+ * @param borderSize tamanho da borda da janela
+ * @return Box retorna uma Box que representa a janela do app
+*/
 Box *initScreen(unsigned short borderSize)
 {
     unsigned short *windowSizes = getWindowSize();
@@ -12,6 +24,12 @@ Box *initScreen(unsigned short borderSize)
     return window;
 }
 
+
+/**
+ * @brief desenha na tela o menu inicial
+ * 
+ * @return void
+*/
 void menu()
 {
     Box *window = initScreen(1);
@@ -20,10 +38,18 @@ void menu()
     unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
+    Button *Entrar = createButton();
+
     free(window); free(title);
     free(titleTextPos);
 }
 
+
+/**
+ * @brief define as telas a serem utilizadas no programa e retorna elas em um array
+ * 
+ * @return void * retorna um array de funções que desenham as telas 
+*/
 void *getScreens()
 {
     RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen));
@@ -31,5 +57,12 @@ void *getScreens()
     return screens;
 }
 
+
+/**
+ * @brief libera memoria alocada de um objeto RenderScreen
+ * 
+ * @param screens array de RenderScreen a ter memória liberada
+ * @return void
+*/
 void freeScreens(RenderScreen *screens)
 { free(screens); }
