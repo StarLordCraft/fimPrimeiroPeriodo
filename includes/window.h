@@ -35,7 +35,7 @@ typedef struct
     unsigned short startPointY;
 
     const char *text;
-    void (*onClick)(void);
+    void (*onClick)();
 } Button;
 
 /// @section Global Variables
@@ -296,4 +296,28 @@ void renderButton(Button *button)
     addButtonToScreen(button);
 
     free(centerPos);
+}
+
+/**
+ * @brief Cria um Button
+ * @overload Overload com o onClick
+ *
+ * @param width largura do button
+ * @param height altura do button
+ * @param startPointX Posicionamento no eixo X do button
+ * @param startPointY Posicionamento no eixo Y do button
+ * @return Button retorna um elemento de interação renderizável na tela
+ */
+Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX, unsigned short startPointY, const char *label, void (*callBack)(void))
+{
+    Button *newButton = (Button *) malloc(sizeof(Button));
+    
+    newButton->width = width;
+    newButton->height = height;
+    newButton->startPointX = startPointX;
+    newButton->startPointY = startPointY;
+    newButton->text = label;
+    newButton->onClick = callBack;
+    
+    return newButton;
 }

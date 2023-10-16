@@ -24,6 +24,10 @@ Box *initScreen(unsigned short borderSize)
     return window;
 }
 
+void teste()
+{
+    exit(1);
+}
 
 /**
  * @brief desenha na tela o menu inicial
@@ -33,12 +37,14 @@ Box *initScreen(unsigned short borderSize)
 void menu()
 {
     Box *window = initScreen(1);
-    Box *title = createBox(10, 5, getCenterPos(window, 10, TRUE, FALSE)[0], 3);
+    unsigned short windowCenterX = getCenterPos(window, 10, TRUE, FALSE)[0];
+    Box *title = createBox(10, 5, windowCenterX, 3);
     createBorder(title, 1);
     unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
-    Button *Entrar = createButton();
+    Button *Entrar = createButton(10, 5, windowCenterX, 15, "Entrar", teste);
+    renderButton(Entrar);
 
     free(window); free(title);
     free(titleTextPos);
