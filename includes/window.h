@@ -50,7 +50,9 @@ unsigned short numScreenButtons = 0;
  * @return boolean true se estiver rodando false senão
  */
 boolean isOpen()
-{ return open; }
+{
+    return open;
+}
 
 /**
  * @brief define o estado da window
@@ -272,13 +274,13 @@ unsigned short *getCenterPos(Box *boxRelative, unsigned short textLength, boolea
  */
 void addButtonToScreen(Button *button)
 {
-    screenButtons = (Button *)realloc(screenButtons, (numScreenButtons + 1) * sizeof(Button));
+    ++numScreenButtons;
+    screenButtons = (Button *)realloc(screenButtons, numScreenButtons * sizeof(Button*));
 
     if (screenButtons == NULL)
         error("Falha na alocação de memória.\n");
 
-    screenButtons[numScreenButtons] = *button;
-    numScreenButtons++;
+    screenButtons[numScreenButtons - 1] = *button;
 }
 
 /**
@@ -300,7 +302,6 @@ void renderButton(Button *button)
 
 /**
  * @brief Cria um Button
- * @overload Overload com o onClick
  *
  * @param width largura do button
  * @param height altura do button
@@ -308,16 +309,19 @@ void renderButton(Button *button)
  * @param startPointY Posicionamento no eixo Y do button
  * @return Button retorna um elemento de interação renderizável na tela
  */
-Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX, unsigned short startPointY, const char *label, void (*callBack)(void))
+Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX,
+                     unsigned short startPointY, const char *label, void (*callBack)(void))
 {
-    Button *newButton = (Button *) malloc(sizeof(Button));
-    
+    Button *newButton = (Button *)malloc(sizeof(Button));
+
     newButton->width = width;
     newButton->height = height;
     newButton->startPointX = startPointX;
     newButton->startPointY = startPointY;
     newButton->text = label;
     newButton->onClick = callBack;
-    
+
+    renderButton(newButton);
+
     return newButton;
 }

@@ -7,6 +7,17 @@ void error(char *message)
     exit(1);
 }
 
+void clearScreen()
+{
+    #ifdef _WIN32
+        system("cls");
+    #elif defined(__linux__)
+        system("clear");
+    #endif 
+    
+    printf("\033[2J\033[1;1H");
+}
+
 typedef enum {
     FALSE,
     TRUE,

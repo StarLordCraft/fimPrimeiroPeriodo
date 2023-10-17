@@ -4,6 +4,7 @@ typedef void (*RenderScreen)();
 
 typedef enum {
     MENU,
+    LOGIN,
 }AppState;
 
 AppState appState = MENU;
@@ -24,9 +25,15 @@ Box *initScreen(unsigned short borderSize)
     return window;
 }
 
-void teste()
+/**
+ * @brief troca pra tela main
+ * 
+ * @return void
+*/
+void entrar()
 {
-    exit(1);
+    clearScreen(); 
+    appState = MAIN; 
 }
 
 /**
@@ -36,6 +43,7 @@ void teste()
 */
 void menu()
 {
+    
     Box *window = initScreen(1);
     unsigned short windowCenterX = getCenterPos(window, 10, TRUE, FALSE)[0];
     Box *title = createBox(10, 5, windowCenterX, 3);
@@ -43,13 +51,24 @@ void menu()
     unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
-    Button *Entrar = createButton(10, 5, windowCenterX, 15, "Entrar", teste);
-    renderButton(Entrar);
+    Button *Entrar = createButton(10, 5, windowCenterX, 15, "Entrar", entrar);
 
     free(window); free(title);
-    free(titleTextPos);
+    free(titleTextPos); free(Entrar);
 }
 
+
+/**
+ * @brief desenha na tela o ponto de login
+ * 
+ * @return void
+*/
+void login()
+{
+    Box *window = initScreen(1);
+
+    free(window);
+}
 
 /**
  * @brief define as telas a serem utilizadas no programa e retorna elas em um array
@@ -58,8 +77,9 @@ void menu()
 */
 void *getScreens()
 {
-    RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen));
-    screens[0] = menu;
+    RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen) * 3);
+    screens[MENU] = menu;
+    screens[LOGIN] = login;
     return screens;
 }
 
