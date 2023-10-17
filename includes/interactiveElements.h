@@ -127,6 +127,7 @@ void freeScreenButtons()
 {
     for(int i = 0; i < numScreenButtons; ++i)
         free(&screenButtons[i]);
+
     free(screenButtons);
     numScreenButtons = 0;
 }
@@ -156,28 +157,35 @@ Input *createInput(unsigned short width, unsigned short height, unsigned short s
 }
 
 /**
- * @brief Testa se um input foi clicado e define todos os outros como não clicados
+ * @brief Define o foco de um input como TRUE e o resto pra FALSE
+ *
+ * @param input input a ter foco
+ * @return void
+ */
+void setFocusInput(Input *input)
+{
+    for(int i = 0; i < numScreenInputs; ++i)
+        screenInputs[i].focused = FALSE;
+
+    input->focused = TRUE;
+    inputFocused = input;
+}
+
+/**
+ * @brief Testa se um input foi clicado
  *
  * @param input input a ser testado
  * @param mouseX posição X do mouse
  * @param mouseY posição Y do mouse
  * @return void
  */
-void setFocusInput(Input *input, unsigned short mouseX, unsigned short mouseY)
+void handleInputMouse(Input *input, unsigned short mouseX, unsigned short mouseY)
 {
-    unsigned short noFocusedInputs = 0;
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
         mouseY >= input->startPointY && mouseY < (input->startPointY + input->height)){
-            input->focused = TRUE;
-            inputFocused = input;
+            setFocusInput(input);
         }
-
-    else {
-        ++noFocusedInputs;
-        input->focused = FALSE;
-    }
-
-    if(noFocusedInputs >= numScreenInputs) inputFocused = NULL;
+    else inputFocused = NULL;
 }
 
 /**
@@ -197,6 +205,7 @@ void freeScreenInputs()
 {
     for(int i = 0; i < numScreenInputs; ++i)
         freeInput(&screenInputs[i]);
+
     free(screenInputs); free(inputFocused);
     numScreenInputs = 0;
 }
@@ -208,6 +217,7 @@ void freeScreenInputs()
  */
 void handleEvents()
 {
+    boolean hasInputFocused = !(inputFocused == NULL);
 #ifdef _WIN32
     ReadConsoleInput(hInput, irInBuf, 128, &cNumRead);
     for (DWORD i = 0; i < cNumRead; i++)
@@ -224,12 +234,12 @@ void handleEvents()
                 inputFocused = FALSE;
 
                 for(int i = 0; i < numScreenInputs; ++i)
-                    setFocusInput(&screenInputs[i], pos.X, pos.Y);
+                    handleInputMouse(&screenInputs[i], pos.X, pos.Y);
             }
         }
     }
 
-    if (kbhit() && getch() == 27 && !inputFocused)
+    if (kbhit() && getch() == 27 && !hasInputFocused)
         setIsOpen(FALSE);
 
 #elif defined(__linux__)
@@ -245,11 +255,11 @@ void handleEvents()
                 inputFocused = FALSE;
                 
                 for (int i = 0; i < numScreenInputs; ++i)
-                    setFocusInput(&screenInputs[i], event.x, event.y);
+                    handleInputMouse(&screenInputs[i], event.x, event.y);
             }
     }
 
-    if (ch == 'q' && !inputFocused)
+    if (ch == 'q' && !hasInputFocused)
         setIsOpen(FALSE);
 
     refresh();

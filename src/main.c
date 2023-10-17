@@ -6,12 +6,11 @@ int main(int argc, char **argv) {
     RenderScreen *screens = getScreens(); 
 
     while(isOpen()){
-        numScreenButtons = 0;
         screens[appState]();
+        
+        refresh();
 
         handleEvents();
-
-        refresh();
     }
 
     freeScreens(screens);

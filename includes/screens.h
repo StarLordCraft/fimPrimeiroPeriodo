@@ -58,6 +58,7 @@ void cadastrar()
 */
 void menu()
 {
+    numScreenButtons = 0;
     
     Box *window = initScreen(1);
 
