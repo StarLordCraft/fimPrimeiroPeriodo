@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     }
 
     freeScreens(screens);
-    freeScreenButtons();
+    freeScreenButtons(); freeScreenInputs();
 
     #ifdef __linux__
         endwin();

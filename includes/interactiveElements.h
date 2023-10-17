@@ -126,7 +126,7 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
 void freeScreenButtons()
 {
     for(int i = 0; i < numScreenButtons; ++i)
-        free(screenButtons[i]);
+        free(&screenButtons[i]);
     free(screenButtons);
     numScreenButtons = 0;
 }
@@ -181,6 +181,14 @@ void setFocusInput(Input *input, unsigned short mouseX, unsigned short mouseY)
 }
 
 /**
+ * @brief Desaloca memória de um input.
+ *
+ * @return void
+ */
+void freeInput(Input *input)
+{ free(input->text); free(input); }
+
+/**
  * @brief Reseta o array de inputs para receber os inputs de uma outra tela.
  *
  * @return void
@@ -188,7 +196,7 @@ void setFocusInput(Input *input, unsigned short mouseX, unsigned short mouseY)
 void freeScreenInputs()
 {
     for(int i = 0; i < numScreenInputs; ++i)
-        free(screenInputs[i]);
+        freeInput(&screenInputs[i]);
     free(screenInputs); free(inputFocused);
     numScreenInputs = 0;
 }
