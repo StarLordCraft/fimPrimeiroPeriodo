@@ -189,6 +189,12 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
         inputFocused = NULL;
 }
 
+/**
+ * @brief função que deve realizar tratamento de entrada de dados nos campos de input seja deleção ou adição
+ * 
+ * @param key o código da tecla apertada pelo usuário
+ * @return void
+*/
 void handleInputText(unsigned short key)
 {
     if (key == 0407 && strlen(inputFocused->text) > 0){
