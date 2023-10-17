@@ -178,7 +178,7 @@ void setFocusInput(Input *input)
  * @param mouseY posição Y do mouse
  * @return void
  */
-void handleInputMouse(Input *input, unsigned short mouseX, unsigned short mouseY)
+void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short mouseY)
 {
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
         mouseY >= input->startPointY && mouseY < (input->startPointY + input->height))
@@ -239,7 +239,7 @@ void handleEvents()
                 inputFocused = FALSE;
 
                 for (int i = 0; i < numScreenInputs; ++i)
-                    handleInputMouse(&screenInputs[i], pos.X, pos.Y);
+                    handleInputClickEvent(&screenInputs[i], pos.X, pos.Y);
             }
         }
     }
@@ -261,7 +261,7 @@ void handleEvents()
                 inputFocused = FALSE;
 
                 for (int i = 0; i < numScreenInputs; ++i)
-                    handleInputMouse(&screenInputs[i], event.x, event.y);
+                    handleInputClickEvent(&screenInputs[i], event.x, event.y);
             }
     }
 
