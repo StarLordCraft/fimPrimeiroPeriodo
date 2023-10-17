@@ -75,7 +75,6 @@ void menu()
     free(window); free(title);
     free(titleTextPos); free(Entrar);
     free(windowCenter); free(Cadastrar);
-    clearScreen();
 }
 
 

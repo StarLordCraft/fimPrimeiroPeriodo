@@ -26,6 +26,7 @@ typedef struct
     unsigned short startPointX;
     unsigned short startPointY;
     char *text;
+    unsigned short textSize;
     const char *label;
     boolean focused;
 } Input;
@@ -150,7 +151,9 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->startPointX = startPointX;
     newInput->startPointY = startPointY;
     newInput->label = label;
+    newInput->text = (char *)malloc(sizeof(char) + 1);
     newInput->focused = FALSE;
+    newInput->textSize = 0;
     return newInput;
 }
 
@@ -181,11 +184,36 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
 {
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
         mouseY >= input->startPointY && mouseY < (input->startPointY + input->height))
-    {
         setFocusInput(input);
-    }
     else
         inputFocused = NULL;
+}
+
+void handleInputText(unsigned short key)
+{
+    if (key == 0407 && strlen(inputFocused->text) > 0){
+        --inputFocused->textSize;
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        if (newText != NULL)
+        {
+            inputFocused->text = newText;
+            inputFocused->text[inputFocused->textSize] = '\0';
+        }
+        else
+            error("Falha ao realocar memoria no input");
+    }
+
+    else if (key >= 32 && key <= 126 && strlen(inputFocused->text) < inputFocused->width){
+        ++inputFocused->textSize;
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        if (newText != NULL)
+        {
+            inputFocused->text = newText;
+            inputFocused->text[inputFocused->textSize - 1] = key;
+        }
+        else
+            error("Falha ao realocar memoria no input");
+    }
 }
 
 /**
@@ -242,9 +270,12 @@ void handleEvents()
             }
         }
     }
+    unsigned short key = getch();
 
-    if (kbhit() && getch() == 27 && !hasInputFocused)
+    if (kbhit() && key == 27 && !hasInputFocused)
         setIsOpen(FALSE);
+    else if(hasInputFocused)
+        handleInputText(key);
 
 #elif defined(__linux__)
     int ch = getch();
@@ -266,6 +297,8 @@ void handleEvents()
 
     if (ch == 'q' && !hasInputFocused)
         setIsOpen(FALSE);
+    else if(hasInputFocused)
+        handleInputText(ch);
 
     refresh();
 #endif
