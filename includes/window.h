@@ -275,7 +275,7 @@ unsigned short *getCenterPos(Box *boxRelative, unsigned short textLength, boolea
 void addButtonToScreen(Button *button)
 {
     ++numScreenButtons;
-    screenButtons = (Button *)realloc(screenButtons, numScreenButtons * sizeof(Button*));
+    screenButtons = (Button *)realloc(screenButtons, numScreenButtons * sizeof(Button));
 
     if (screenButtons == NULL)
         error("Falha na alocação de memória.\n");

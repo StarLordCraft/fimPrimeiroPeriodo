@@ -5,6 +5,7 @@ typedef void (*RenderScreen)();
 typedef enum {
     MENU,
     LOGIN,
+    CADASTRO,
 }AppState;
 
 AppState appState = MENU;
@@ -26,14 +27,25 @@ Box *initScreen(unsigned short borderSize)
 }
 
 /**
- * @brief troca pra tela main
+ * @brief troca pra tela de login
  * 
  * @return void
 */
 void entrar()
 {
     clearScreen(); 
-    appState = MAIN; 
+    appState = LOGIN; 
+}
+
+/**
+ * @brief troca pra tela de login
+ * 
+ * @return void
+*/
+void cadastrar()
+{
+    clearScreen(); 
+    appState = CADASTRO; 
 }
 
 /**
@@ -45,16 +57,20 @@ void menu()
 {
     
     Box *window = initScreen(1);
-    unsigned short windowCenterX = getCenterPos(window, 10, TRUE, FALSE)[0];
-    Box *title = createBox(10, 5, windowCenterX, 3);
+
+    unsigned short *windowCenter = getCenterPos(window, 10, TRUE, TRUE);
+    
+    Box *title = createBox(10, 5, windowCenter[0] + 3, 3);
     createBorder(title, 1);
     unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
-    Button *Entrar = createButton(10, 5, windowCenterX, 15, "Entrar", entrar);
+    Button *Entrar = createButton(15, 5, windowCenter[0], windowCenter[1], " Entrar", entrar);
+    Button *Cadastrar = createButton(15, 5, windowCenter[0], (windowCenter[1] + Entrar->height + 2), "Cadastrar", cadastrar);
 
     free(window); free(title);
     free(titleTextPos); free(Entrar);
+    free(windowCenter); free(Cadastrar);
 }
 
 
@@ -71,16 +87,28 @@ void login()
 }
 
 /**
+ * @brief desenha na tela o ponto de register
+ * 
+ * @return void
+*/
+void registro()
+{
+
+}
+
+/**
  * @brief define as telas a serem utilizadas no programa e retorna elas em um array
  * 
  * @return void * retorna um array de funções que desenham as telas 
 */
 void *getScreens()
 {
-    RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen) * 3);
+    RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen) * 4);
     screens[MENU] = menu;
     screens[LOGIN] = login;
+    screens[CADASTRO] = registro;
     return screens;
+
 }
 
 
