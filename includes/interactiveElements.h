@@ -135,19 +135,18 @@ void freeScreenButtons()
  * @brief Cria um Input
  *
  * @param width largura do Input
- * @param height altura do Input
  * @param startPointX Posicionamento no eixo X do Input
  * @param startPointY Posicionamento no eixo Y do Input
  * @param label Texto de call to action do Input
  * @param callBack o que acontece quando esse botão é clicado
  * @return Button retorna um elemento de interação renderizável na tela
  */
-Input *createInput(unsigned short width, unsigned short height, unsigned short startPointX, unsigned short startPointY,
+Input *createInput(unsigned short width, unsigned short startPointX, unsigned short startPointY,
                    const char *label)
 {
     Input *newInput = (Input *)malloc(sizeof(Input));
     newInput->width = width;
-    newInput->height = height;
+    newInput->height = 5;
     newInput->startPointX = startPointX;
     newInput->startPointY = startPointY;
     newInput->label = label;

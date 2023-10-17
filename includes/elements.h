@@ -4,12 +4,10 @@
 #include <string.h>
 #include "lib.h"
 
-#ifdef _WIN32
-#include <windows.h>
-#elif defined(__linux__)
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <ncurses.h>
+#ifdef __linux__
+    #include <sys/ioctl.h>
+    #include <unistd.h>
+    #include <ncurses.h>
 #endif
 
 /// @brief @section GLOBAL VARIABLES

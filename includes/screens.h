@@ -75,6 +75,7 @@ void menu()
     free(window); free(title);
     free(titleTextPos); free(Entrar);
     free(windowCenter); free(Cadastrar);
+    clearScreen();
 }
 
 
@@ -112,7 +113,6 @@ void *getScreens()
     screens[LOGIN] = login;
     screens[CADASTRO] = registro;
     return screens;
-
 }
 
 

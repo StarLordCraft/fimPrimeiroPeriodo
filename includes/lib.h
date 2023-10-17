@@ -4,19 +4,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
+
 void error(char *message)
 {
     fprintf(stderr, "Error: %s\n", message);
     exit(1);
 }
 
-void clearScreen()
-{
+void clearScreen() {
     #ifdef _WIN32
         system("cls");
-    #elif defined(__linux__)
+    #else
         system("clear");
-    #endif 
+    #endif
 
     printf("\033[2J\033[1;1H");
 }
