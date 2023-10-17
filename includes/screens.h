@@ -1,4 +1,7 @@
-#include "window.h"
+#ifndef SCREENS_H
+#define SCREENS_H
+
+#include "interactiveElements.h"
 
 typedef void (*RenderScreen)();
 
@@ -120,3 +123,5 @@ void *getScreens()
 */
 void freeScreens(RenderScreen *screens)
 { free(screens); }
+
+#endif

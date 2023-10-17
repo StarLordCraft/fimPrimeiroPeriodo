@@ -1,3 +1,6 @@
+#ifndef LIB_H
+#define LIB_H
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +17,7 @@ void clearScreen()
     #elif defined(__linux__)
         system("clear");
     #endif 
-    
+
     printf("\033[2J\033[1;1H");
 }
 
@@ -22,3 +25,4 @@ typedef enum {
     FALSE,
     TRUE,
 } boolean;
+#endif
