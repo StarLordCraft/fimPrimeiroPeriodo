@@ -65,13 +65,16 @@ void addButtonToScreen(Button *button)
  */
 void renderButton(Button *button)
 {
-    createBorder(createBox(button->width, button->height, button->startPointX, button->startPointY), 1);
-    unsigned short *centerPos = getCenterPos(createBox(button->width, button->height, button->startPointX, button->startPointY), strlen(button->text), TRUE, TRUE);
+    Box *box = createBox(button->width, button->height, button->startPointX, button->startPointY);
+    createBorder(box, 1);
+
+    unsigned short *centerPos = getCenterPos(box, strlen(button->text), TRUE, TRUE);
+
     renderText(centerPos[0], centerPos[1], button->text);
 
     addButtonToScreen(button);
 
-    free(centerPos);
+    free(centerPos); free(box);
 }
 
 /**
@@ -133,19 +136,59 @@ void freeScreenButtons()
 }
 
 /**
+ * @brief Adiciona um input ao array de inputs para processar eventos de clique.
+ *
+ * @param input O input a ser adicionado ao array.
+ * @return void
+ */
+void addInputToScreen(Input *input)
+{
+    ++numScreenInputs;
+    screenInputs = (Input *)realloc(screenButtons, numScreenInputs * sizeof(Input));
+
+    if (screenInputs == NULL)
+        error("Falha na alocação de memória.\n");
+
+    screenInputs[numScreenInputs - 1] = *input;
+}
+
+/**
+ * @brief Renderiza um input na tela e o torna clicável, adicionando-o a um array de inputs.
+ *
+ * @param input O input a ser renderizado na tela.
+ * @return void
+ */
+void renderInput(Input *input)
+{
+    Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
+    createBorder(box, 1);
+
+    renderText(input->startPointX + 1, getCenterPos(box, strlen(input->text), FALSE, TRUE)[1], input->text);
+
+    if (input->focused){
+        unsigned short cursorX = input->startPointX + 1 + input->textSize;
+        renderText(cursorX, input->startPointY + 1, "_");
+    }
+
+    addInputToScreen(input);
+
+    free(box);
+}
+
+/**
  * @brief Cria um Input
  *
  * @param width largura do Input
  * @param startPointX Posicionamento no eixo X do Input
  * @param startPointY Posicionamento no eixo Y do Input
  * @param label Texto de call to action do Input
- * @param callBack o que acontece quando esse botão é clicado
- * @return Button retorna um elemento de interação renderizável na tela
+ * @return Input retorna um elemento de interação renderizável na tela
  */
 Input *createInput(unsigned short width, unsigned short startPointX, unsigned short startPointY,
                    const char *label)
 {
     Input *newInput = (Input *)malloc(sizeof(Input));
+
     newInput->width = width;
     newInput->height = 5;
     newInput->startPointX = startPointX;
@@ -154,6 +197,9 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->text = (char *)malloc(sizeof(char) + 1);
     newInput->focused = FALSE;
     newInput->textSize = 0;
+
+    renderInput(newInput);
+
     return newInput;
 }
 
