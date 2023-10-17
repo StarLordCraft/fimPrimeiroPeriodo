@@ -101,7 +101,6 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
     return newButton;
 }
 
-
 /**
  * @brief Testa se um botão foi clicado
  *
@@ -125,7 +124,7 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
  */
 void freeScreenButtons()
 {
-    for(int i = 0; i < numScreenButtons; ++i)
+    for (int i = 0; i < numScreenButtons; ++i)
         free(&screenButtons[i]);
 
     free(screenButtons);
@@ -144,7 +143,7 @@ void freeScreenButtons()
  * @return Button retorna um elemento de interação renderizável na tela
  */
 Input *createInput(unsigned short width, unsigned short height, unsigned short startPointX, unsigned short startPointY,
-                        const char *label)
+                   const char *label)
 {
     Input *newInput = (Input *)malloc(sizeof(Input));
     newInput->width = width;
@@ -164,7 +163,7 @@ Input *createInput(unsigned short width, unsigned short height, unsigned short s
  */
 void setFocusInput(Input *input)
 {
-    for(int i = 0; i < numScreenInputs; ++i)
+    for (int i = 0; i < numScreenInputs; ++i)
         screenInputs[i].focused = FALSE;
 
     input->focused = TRUE;
@@ -182,10 +181,12 @@ void setFocusInput(Input *input)
 void handleInputMouse(Input *input, unsigned short mouseX, unsigned short mouseY)
 {
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
-        mouseY >= input->startPointY && mouseY < (input->startPointY + input->height)){
-            setFocusInput(input);
-        }
-    else inputFocused = NULL;
+        mouseY >= input->startPointY && mouseY < (input->startPointY + input->height))
+    {
+        setFocusInput(input);
+    }
+    else
+        inputFocused = NULL;
 }
 
 /**
@@ -194,7 +195,10 @@ void handleInputMouse(Input *input, unsigned short mouseX, unsigned short mouseY
  * @return void
  */
 void freeInput(Input *input)
-{ free(input->text); free(input); }
+{
+    free(input->text);
+    free(input);
+}
 
 /**
  * @brief Reseta o array de inputs para receber os inputs de uma outra tela.
@@ -203,10 +207,11 @@ void freeInput(Input *input)
  */
 void freeScreenInputs()
 {
-    for(int i = 0; i < numScreenInputs; ++i)
+    for (int i = 0; i < numScreenInputs; ++i)
         freeInput(&screenInputs[i]);
 
-    free(screenInputs); free(inputFocused);
+    free(screenInputs);
+    free(inputFocused);
     numScreenInputs = 0;
 }
 
@@ -233,7 +238,7 @@ void handleEvents()
 
                 inputFocused = FALSE;
 
-                for(int i = 0; i < numScreenInputs; ++i)
+                for (int i = 0; i < numScreenInputs; ++i)
                     handleInputMouse(&screenInputs[i], pos.X, pos.Y);
             }
         }
@@ -248,12 +253,13 @@ void handleEvents()
     {
         MEVENT event;
         if (getmouse(&event) == OK)
-            if (event.bstate & BUTTON1_PRESSED){
+            if (event.bstate & BUTTON1_PRESSED)
+            {
                 for (int i = 0; i < numScreenButtons; ++i)
                     handleButtonEvent(&screenButtons[i], event.x, event.y);
-                
+
                 inputFocused = FALSE;
-                
+
                 for (int i = 0; i < numScreenInputs; ++i)
                     handleInputMouse(&screenInputs[i], event.x, event.y);
             }
