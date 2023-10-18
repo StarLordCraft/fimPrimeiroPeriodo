@@ -34,7 +34,6 @@ void resetScreen()
     freeScreenButtons();
     freeScreenInputs();
     clearScreen();
-    cursorVisible = TRUE;
 }
 
 /**
@@ -42,7 +41,7 @@ void resetScreen()
  * 
  * @return void
 */
-void entrar()
+void changeScreenLogin()
 {
     resetScreen(); 
     appState = LOGIN; 
@@ -53,7 +52,7 @@ void entrar()
  * 
  * @return void
 */
-void cadastrar()
+void changeScreenRegister()
 {
     resetScreen(); 
     appState = CADASTRO; 
@@ -65,8 +64,7 @@ void cadastrar()
  * @return void
 */
 void renderMenu()
-{
-    
+{    
     Box *window = initScreen(1);
 
     unsigned short *windowCenter = getCenterPos(window, 10, TRUE, TRUE);
@@ -76,12 +74,10 @@ void renderMenu()
     unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 
-    Button *Entrar = createButton(15, 5, windowCenter[0], windowCenter[1], " Entrar", entrar);
-    Button *Cadastrar = createButton(15, 5, windowCenter[0], (windowCenter[1] + Entrar->height + 2), "Cadastrar", cadastrar);
+    Button *Entrar = createButton(15, 5, windowCenter[0], windowCenter[1], " Entrar", changeScreenLogin);
+    Button *Cadastrar = createButton(15, 5, windowCenter[0], (windowCenter[1] + Entrar->height + 2), "Cadastrar", changeScreenRegister);
 
-    free(window); free(title);
-    free(titleTextPos); free(Entrar);
-    free(windowCenter); free(Cadastrar);
+    free(window); free(title); free(titleTextPos); free(windowCenter);
 }
 
 
@@ -94,7 +90,6 @@ void renderLogin()
 {
     Box *window = initScreen(1);
     Input *Email = createInput(10, 10, 10, "Email:");
-    renderInput(Email);
 
     free(window);
 }

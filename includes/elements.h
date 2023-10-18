@@ -12,7 +12,6 @@
 
 /// @brief @section GLOBAL VARIABLES
 boolean open = TRUE;
-boolean cursorVisible = TRUE;
 /// @endparblock
 
 /**

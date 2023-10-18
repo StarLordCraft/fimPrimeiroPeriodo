@@ -39,6 +39,8 @@ unsigned short numScreenButtons = 0;
 Input *screenInputs = NULL;
 unsigned short numScreenInputs = 0;
 Input *inputFocused = NULL;
+
+boolean cursorVisible = TRUE;
 /// @endparblock end Global Variables
 
 /**
@@ -59,7 +61,7 @@ void addButtonToScreen(Button *button)
 }
 
 /**
- * @brief Renderiza um botão na tela e o torna clicável, adicionando-o a um array de botões.
+ * @brief Renderiza um botão na tela.
  *
  * @param button O botão a ser renderizado na tela.
  * @return void
@@ -72,8 +74,6 @@ void renderButton(Button *button)
     unsigned short *centerPos = getCenterPos(box, strlen(button->text), TRUE, TRUE);
 
     renderText(centerPos[0], centerPos[1], button->text);
-
-    addButtonToScreen(button);
 
     free(centerPos); free(box);
 }
@@ -92,6 +92,13 @@ void renderButton(Button *button)
 Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX,
                      unsigned short startPointY, const char *label, void (*callBack)(void))
 {
+    if(screenButtons)
+        for(int i = 0; i < numScreenButtons; ++i)
+            if(screenButtons[i].startPointX == startPointX && screenButtons[i].startPointY == startPointY){
+                renderButton(&screenButtons[i]);
+                return &screenButtons[i];
+            }
+
     Button *newButton = (Button *)malloc(sizeof(Button));
 
     newButton->width = width;
@@ -101,7 +108,8 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
     newButton->text = label;
     newButton->onClick = callBack;
 
-    renderButton(newButton);
+    renderButton(&newButton);
+    addButtonToScreen(newButton);
 
     return newButton;
 }
@@ -118,7 +126,7 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
 {
     if (mouseX >= button->startPointX && mouseX < (button->startPointX + button->width) &&
         mouseY >= button->startPointY && mouseY < (button->startPointY + button->height))
-        if (button->onClick != NULL)
+        if (button->onClick)
             button->onClick();
 }
 
@@ -196,8 +204,10 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
 {
     if(screenInputs)
         for(int i = 0; i < numScreenInputs; ++i)
-            if(screenInputs[i].startPointX == startPointX && screenInputs[i].startPointY == startPointY)
+            if(screenInputs[i].startPointX == startPointX && screenInputs[i].startPointY == startPointY){
+                renderInput(&screenInputs[i])
                 return &screenInputs[i];
+            }
         
 
     Input *newInput = (Input *)malloc(sizeof(Input));
@@ -211,6 +221,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->focused = FALSE;
     newInput->textSize = 0;
 
+    renderInput(newInput);
     addInputToScreen(newInput);
 
     return newInput;
