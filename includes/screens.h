@@ -66,7 +66,6 @@ void cadastrar()
 */
 void renderMenu()
 {
-    numScreenButtons = 0;
     
     Box *window = initScreen(1);
 
@@ -94,7 +93,7 @@ void renderMenu()
 void renderLogin()
 {
     Box *window = initScreen(1);
-    Input *Email = createInput(10, 10, 10, "oi");
+    Input *Email = createInput(10, 10, 10, "Email:");
     renderInput(Email);
 
     free(window);

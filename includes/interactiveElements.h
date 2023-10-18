@@ -28,6 +28,7 @@ typedef struct
     char *text;
     unsigned short textSize;
     const char *label;
+    const char *value;
     boolean focused;
 } Input;
 
@@ -158,6 +159,8 @@ void addInputToScreen(Input *input)
  */
 void renderInput(Input *input)
 {
+    renderText(input->startPointX, input->startPointY - 1, input->label);
+
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
     createBorder(box, 1, "-");
 
@@ -200,7 +203,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     Input *newInput = (Input *)malloc(sizeof(Input));
 
     newInput->width = width;
-    newInput->height = 5;
+    newInput->height = 3;
     newInput->startPointX = startPointX;
     newInput->startPointY = startPointY;
     newInput->label = label;
