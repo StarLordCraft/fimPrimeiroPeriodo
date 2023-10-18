@@ -129,6 +129,7 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
 void freeScreenButtons()
 {
     free(screenButtons);
+    screenButtons = NULL;
     numScreenButtons = 0;
 }
 
@@ -288,6 +289,7 @@ void freeScreenInputs()
 
     free(screenInputs);
     free(inputFocused);
+    screenInputs = NULL;
     numScreenInputs = 0;
 }
 
