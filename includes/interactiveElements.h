@@ -128,9 +128,6 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
  */
 void freeScreenButtons()
 {
-    for (int i = 0; i < numScreenButtons; ++i)
-        free(&screenButtons[i]);
-
     free(screenButtons);
     numScreenButtons = 0;
 }
@@ -301,7 +298,6 @@ void freeScreenInputs()
  */
 void handleEvents()
 {
-    boolean hasInputFocused = !(inputFocused == NULL);
 #ifdef _WIN32
     ReadConsoleInput(hInput, irInBuf, 128, &cNumRead);
     for (DWORD i = 0; i < cNumRead; i++)
@@ -315,14 +311,14 @@ void handleEvents()
                 for (int i = 0; i < numScreenButtons; ++i)
                     handleButtonEvent(&screenButtons[i], pos.X, pos.Y);
 
-                inputFocused = FALSE;
-
                 for (int i = 0; i < numScreenInputs; ++i)
                     handleInputClickEvent(&screenInputs[i], pos.X, pos.Y);
             }
         }
     }
     unsigned short key = getch();
+
+    boolean hasInputFocused = !(inputFocused == NULL);
 
     if (kbhit() && key == 27 && !hasInputFocused)
         setIsOpen(FALSE);
@@ -346,6 +342,8 @@ void handleEvents()
                     handleInputClickEvent(&screenInputs[i], event.x, event.y);
             }
     }
+
+    boolean hasInputFocused = !(inputFocused == NULL);
 
     if (ch == 'q' && !hasInputFocused)
         setIsOpen(FALSE);

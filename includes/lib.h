@@ -21,9 +21,9 @@ void clearScreen() {
         system("cls");
     #else
         system("clear");
+        printf("\033[2J\033[1;1H");
     #endif
 
-    printf("\033[2J\033[1;1H");
 }
 
 typedef enum {
