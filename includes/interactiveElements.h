@@ -170,7 +170,7 @@ void renderInput(Input *input)
     if (input->focused) {
         unsigned short cursorX = input->startPointX + 1 + input->textSize;
         if(cursorVisible)
-            renderText(cursorX, posRenderTextY, "_");
+            renderText(cursorX, posRenderTextY, "|");
         else renderText(cursorX, posRenderTextY, " ");
         
         cursorVisible = !cursorVisible;
@@ -213,6 +213,19 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     return newInput;
 }
 
+void removeInputFocus(Input *input)
+{
+    Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
+    unsigned short centerYPos = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
+    unsigned short cursorX = input->startPointX + 1 + input->textSize;
+    
+    renderText(cursorX, centerYPos, " ");
+
+    input->focused = FALSE;
+
+    free(box);
+}
+
 /**
  * @brief Define o foco de um input como TRUE e o resto pra FALSE
  *
@@ -222,7 +235,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
 void setFocusInput(Input *input)
 {
     for (int i = 0; i < numScreenInputs; ++i)
-        screenInputs[i].focused = FALSE;
+        removeInputFocus(&screenInputs[i]);
 
     input->focused = TRUE;
     inputFocused = input;
@@ -242,8 +255,10 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
         mouseY >= input->startPointY && mouseY < (input->startPointY + input->height))
         setFocusInput(input);
-    else
+    else{
         inputFocused = NULL;
+        removeInputFocus(input);
+    }
 }
 
 /**
@@ -272,9 +287,9 @@ void handleInputText(unsigned short key)
             error("Falha ao realocar memoria no input");
     }
 
-    else if (key >= 32 && key <= 126 && strlen(inputFocused->text) < inputFocused->width){
+    else if (key >= 32 && key <= 126 && inputFocused->textSize < inputFocused->width){
         ++inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, inputFocused->textSize * sizeof(char));
         if (newText != NULL)
         {
             inputFocused->text = newText;
