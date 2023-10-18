@@ -34,6 +34,7 @@ void resetScreen()
     freeScreenButtons();
     freeScreenInputs();
     clearScreen();
+    cursorVisible = TRUE;
 }
 
 /**

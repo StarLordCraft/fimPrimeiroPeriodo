@@ -161,13 +161,19 @@ void renderInput(Input *input)
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
     createBorder(box, 1, "-");
 
-    unsigned short posRenderTextY = getCenterPos(box, strlen(input->text), FALSE, TRUE)[1];
-
-    renderText(input->startPointX + 1, posRenderTextY, input->text);
+    unsigned short posRenderTextY = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
+    
+    if(input->text)
+        renderText(input->startPointX + 1, posRenderTextY, input->text);
  
-    if (input->focused){
+    
+    if (input->focused) {
         unsigned short cursorX = input->startPointX + 1 + input->textSize;
-        renderText(cursorX, posRenderTextY, "_");
+        if(cursorVisible)
+            renderText(cursorX, posRenderTextY, "_");
+        else renderText(cursorX, posRenderTextY, " ");
+        
+        cursorVisible = !cursorVisible;
     }
 
     free(box);
@@ -198,7 +204,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->startPointX = startPointX;
     newInput->startPointY = startPointY;
     newInput->label = label;
-    newInput->text = (char *)malloc(sizeof(char) + 1);
+    newInput->text = NULL;
     newInput->focused = FALSE;
     newInput->textSize = 0;
 
@@ -220,6 +226,7 @@ void setFocusInput(Input *input)
 
     input->focused = TRUE;
     inputFocused = input;
+    cursorVisible = TRUE;
 }
 
 /**
@@ -248,6 +255,12 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
 void handleInputText(unsigned short key)
 {
     if (key == 0407 && strlen(inputFocused->text) > 0){
+        Box *box = createBox(inputFocused->width, inputFocused->height, inputFocused->startPointX, inputFocused->startPointY);
+        unsigned short centerYPos = getCenterPos(box, inputFocused->textSize, FALSE, TRUE)[1];
+        unsigned short cursorX = inputFocused->startPointX + 1 + inputFocused->textSize;
+    
+        renderText(cursorX, centerYPos, " ");
+
         --inputFocused->textSize;
         char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
         if (newText != NULL)
