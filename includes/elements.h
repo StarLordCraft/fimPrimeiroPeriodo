@@ -152,7 +152,7 @@ void createBorder(Box *box, unsigned short borderSize)
     for (unsigned short y = 0; y < box->height; ++y)
         for (unsigned short x = 0; x < box->width; ++x)
             if (x < borderSize || x >= (box->width - borderSize) || y < borderSize || y >= (box->height - borderSize))
-                renderText(x + box->startPointX, y + box->startPointY, "#");
+                renderText(x + box->startPointX, y + box->startPointY, "-");
 }
 
 /**
