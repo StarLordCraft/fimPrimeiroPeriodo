@@ -56,7 +56,7 @@ void cadastrar()
  * 
  * @return void
 */
-void menu()
+void renderMenu()
 {
     numScreenButtons = 0;
     
@@ -83,9 +83,11 @@ void menu()
  * 
  * @return void
 */
-void login()
+void renderLogin()
 {
     Box *window = initScreen(1);
+    Input *Email = createInput(10, 10, 10, "oi");
+    renderInput(Email);
 
     free(window);
 }
@@ -95,7 +97,7 @@ void login()
  * 
  * @return void
 */
-void registro()
+void renderRegister()
 {
 
 }
@@ -108,9 +110,9 @@ void registro()
 void *getScreens()
 {
     RenderScreen *screens = (RenderScreen*) malloc(sizeof(RenderScreen) * 4);
-    screens[MENU] = menu;
-    screens[LOGIN] = login;
-    screens[CADASTRO] = registro;
+    screens[MENU] = renderMenu;
+    screens[LOGIN] = renderLogin;
+    screens[CADASTRO] = renderRegister;
     return screens;
 }
 

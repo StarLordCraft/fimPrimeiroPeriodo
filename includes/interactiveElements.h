@@ -142,7 +142,7 @@ void freeScreenButtons()
 void addInputToScreen(Input *input)
 {
     ++numScreenInputs;
-    screenInputs = (Input *)realloc(screenButtons, numScreenInputs * sizeof(Input));
+    screenInputs = (Input *)realloc(screenInputs, numScreenInputs * sizeof(Input));
 
     if (screenInputs == NULL)
         error("Falha na alocação de memória.\n");
@@ -161,14 +161,14 @@ void renderInput(Input *input)
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
     createBorder(box, 1);
 
-    renderText(input->startPointX + 1, getCenterPos(box, strlen(input->text), FALSE, TRUE)[1], input->text);
+    unsigned short posRenderTextY = getCenterPos(box, strlen(input->text), FALSE, TRUE)[1];
 
+    renderText(input->startPointX + 1, posRenderTextY, input->text);
+ 
     if (input->focused){
         unsigned short cursorX = input->startPointX + 1 + input->textSize;
-        renderText(cursorX, input->startPointY + 1, "_");
+        renderText(cursorX, posRenderTextY, "_");
     }
-
-    addInputToScreen(input);
 
     free(box);
 }
@@ -185,6 +185,12 @@ void renderInput(Input *input)
 Input *createInput(unsigned short width, unsigned short startPointX, unsigned short startPointY,
                    const char *label)
 {
+    if(screenInputs)
+        for(int i = 0; i < numScreenInputs; ++i)
+            if(screenInputs[i].startPointX == startPointX && screenInputs[i].startPointY == startPointY)
+                return &screenInputs[i];
+        
+
     Input *newInput = (Input *)malloc(sizeof(Input));
 
     newInput->width = width;
@@ -196,7 +202,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->focused = FALSE;
     newInput->textSize = 0;
 
-    renderInput(newInput);
+    addInputToScreen(newInput);
 
     return newInput;
 }
@@ -267,26 +273,12 @@ void handleInputText(unsigned short key)
 }
 
 /**
- * @brief Desaloca memória de um input.
- *
- * @return void
- */
-void freeInput(Input *input)
-{
-    free(input->text);
-    free(input);
-}
-
-/**
  * @brief Reseta o array de inputs para receber os inputs de uma outra tela.
  *
  * @return void
  */
 void freeScreenInputs()
 {
-    for (int i = 0; i < numScreenInputs; ++i)
-        freeInput(&screenInputs[i]);
-
     free(screenInputs);
     free(inputFocused);
     screenInputs = NULL;
