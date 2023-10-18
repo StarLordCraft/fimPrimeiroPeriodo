@@ -66,7 +66,7 @@ void addButtonToScreen(Button *button)
 void renderButton(Button *button)
 {
     Box *box = createBox(button->width, button->height, button->startPointX, button->startPointY);
-    createBorder(box, 1);
+    createBorder(box, 1, "-");
 
     unsigned short *centerPos = getCenterPos(box, strlen(button->text), TRUE, TRUE);
 
@@ -159,7 +159,7 @@ void addInputToScreen(Input *input)
 void renderInput(Input *input)
 {
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
-    createBorder(box, 1);
+    createBorder(box, 1, "-");
 
     unsigned short posRenderTextY = getCenterPos(box, strlen(input->text), FALSE, TRUE)[1];
 

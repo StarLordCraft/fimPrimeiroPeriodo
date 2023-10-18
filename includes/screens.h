@@ -23,10 +23,17 @@ Box *initScreen(unsigned short borderSize)
 {
     unsigned short *windowSizes = getWindowSize();
     Box *window = createBox(windowSizes[0], windowSizes[1], 0, 0);
-    createBorder(window, borderSize);
+    createBorder(window, borderSize, "_");
     
     free(windowSizes);
     return window;
+}
+
+void resetScreen()
+{
+    freeScreenButtons();
+    freeScreenInputs();
+    clearScreen();
 }
 
 /**
@@ -36,7 +43,7 @@ Box *initScreen(unsigned short borderSize)
 */
 void entrar()
 {
-    clearScreen(); 
+    resetScreen(); 
     appState = LOGIN; 
 }
 
@@ -47,7 +54,7 @@ void entrar()
 */
 void cadastrar()
 {
-    clearScreen(); 
+    resetScreen(); 
     appState = CADASTRO; 
 }
 
@@ -65,7 +72,7 @@ void renderMenu()
     unsigned short *windowCenter = getCenterPos(window, 10, TRUE, TRUE);
     
     Box *title = createBox(10, 5, windowCenter[0] + 3, 3);
-    createBorder(title, 1);
+    createBorder(title, 1, "-");
     unsigned short *titleTextPos = getCenterPos(title, 4, TRUE, TRUE);
     renderText(titleTextPos[0], titleTextPos[1], "MENU");
 

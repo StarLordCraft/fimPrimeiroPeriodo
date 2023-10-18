@@ -142,9 +142,10 @@ void renderText(unsigned short posX, unsigned short posY, const char *text)
  *
  * @param box que receberá borda
  * @param borderSize tamanho da borda
+ * @param border desenho da borda
  * @return void
  */
-void createBorder(Box *box, unsigned short borderSize)
+void createBorder(Box *box, unsigned short borderSize, const char *border)
 {
     if (box->width < 2 * borderSize || box->height < 2 * borderSize)
         error("Tamanho da borda muito grande para a caixa!\n");
@@ -152,7 +153,7 @@ void createBorder(Box *box, unsigned short borderSize)
     for (unsigned short y = 0; y < box->height; ++y)
         for (unsigned short x = 0; x < box->width; ++x)
             if (x < borderSize || x >= (box->width - borderSize) || y < borderSize || y >= (box->height - borderSize))
-                renderText(x + box->startPointX, y + box->startPointY, "-");
+                renderText(x + box->startPointX, y + box->startPointY, border);
 }
 
 /**
