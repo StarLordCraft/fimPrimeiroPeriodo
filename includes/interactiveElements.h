@@ -213,6 +213,13 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     return newInput;
 }
 
+
+/**
+ * @brief remove input focus and the cursor
+ * 
+ * @param input input to has the focus removed
+ * @return void
+*/
 void removeInputFocus(Input *input)
 {
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
@@ -289,11 +296,11 @@ void handleInputText(unsigned short key)
 
     else if (key >= 32 && key <= 126 && inputFocused->textSize < inputFocused->width){
         ++inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, inputFocused->textSize * sizeof(char));
-        if (newText != NULL)
-        {
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        if (newText){
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize - 1] = key;
+            inputFocused->text[inputFocused->textSize] = '\0';
         }
         else
             error("Falha ao realocar memoria no input");
