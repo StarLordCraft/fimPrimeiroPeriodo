@@ -8,7 +8,9 @@ int main(int argc, char **argv) {
     while(isOpen()){
         screens[appState]();
         
-        refresh();
+        #ifdef __linux__
+            refresh();
+        #endif
 
         handleEvents();
     }

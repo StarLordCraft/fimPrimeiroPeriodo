@@ -75,7 +75,8 @@ void renderButton(Button *button)
 
     renderText(centerPos[0], centerPos[1], button->text);
 
-    free(centerPos); free(box);
+    free(centerPos);
+    free(box);
 }
 
 /**
@@ -92,9 +93,10 @@ void renderButton(Button *button)
 Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX,
                      unsigned short startPointY, const char *label, void (*callBack)(void))
 {
-    if(screenButtons)
-        for(int i = 0; i < numScreenButtons; ++i)
-            if(screenButtons[i].startPointX == startPointX && screenButtons[i].startPointY == startPointY){
+    if (screenButtons)
+        for (int i = 0; i < numScreenButtons; ++i)
+            if (screenButtons[i].startPointX == startPointX && screenButtons[i].startPointY == startPointY)
+            {
                 renderButton(&screenButtons[i]);
                 return &screenButtons[i];
             }
@@ -108,7 +110,7 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
     newButton->text = label;
     newButton->onClick = callBack;
 
-    renderButton(&newButton);
+    renderButton(newButton);
     addButtonToScreen(newButton);
 
     return newButton;
@@ -173,17 +175,18 @@ void renderInput(Input *input)
     createBorder(box, 1, "-");
 
     unsigned short posRenderTextY = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
-    
-    if(input->text)
+
+    if (input->text)
         renderText(input->startPointX + 1, posRenderTextY, input->text);
- 
-    
-    if (input->focused) {
+
+    if (input->focused)
+    {
         unsigned short cursorX = input->startPointX + 1 + input->textSize;
-        if(cursorVisible)
+        if (cursorVisible)
             renderText(cursorX, posRenderTextY, "|");
-        else renderText(cursorX, posRenderTextY, " ");
-        
+        else
+            renderText(cursorX, posRenderTextY, " ");
+
         cursorVisible = !cursorVisible;
     }
 
@@ -202,13 +205,13 @@ void renderInput(Input *input)
 Input *createInput(unsigned short width, unsigned short startPointX, unsigned short startPointY,
                    const char *label)
 {
-    if(screenInputs)
-        for(int i = 0; i < numScreenInputs; ++i)
-            if(screenInputs[i].startPointX == startPointX && screenInputs[i].startPointY == startPointY){
-                renderInput(&screenInputs[i])
+    if (screenInputs)
+        for (int i = 0; i < numScreenInputs; ++i)
+            if (screenInputs[i].startPointX == startPointX && screenInputs[i].startPointY == startPointY)
+            {
+                renderInput(&screenInputs[i]);
                 return &screenInputs[i];
             }
-        
 
     Input *newInput = (Input *)malloc(sizeof(Input));
 
@@ -227,19 +230,18 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     return newInput;
 }
 
-
 /**
  * @brief remove input focus and the cursor
- * 
+ *
  * @param input input to has the focus removed
  * @return void
-*/
+ */
 void removeInputFocus(Input *input)
 {
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
     unsigned short centerYPos = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
     unsigned short cursorX = input->startPointX + 1 + input->textSize;
-    
+
     renderText(cursorX, centerYPos, " ");
 
     input->focused = FALSE;
@@ -276,7 +278,8 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
         mouseY >= input->startPointY && mouseY < (input->startPointY + input->height))
         setFocusInput(input);
-    else{
+    else
+    {
         inputFocused = NULL;
         removeInputFocus(input);
     }
@@ -284,17 +287,18 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
 
 /**
  * @brief função que deve realizar tratamento de entrada de dados nos campos de input seja deleção ou adição
- * 
+ *
  * @param key o código da tecla apertada pelo usuário
  * @return void
-*/
+ */
 void handleInputText(unsigned short key)
 {
-    if (key == 0407 && strlen(inputFocused->text) > 0){
+    if (key == 0407 && strlen(inputFocused->text) > 0)
+    {
         Box *box = createBox(inputFocused->width, inputFocused->height, inputFocused->startPointX, inputFocused->startPointY);
         unsigned short centerYPos = getCenterPos(box, inputFocused->textSize, FALSE, TRUE)[1];
         unsigned short cursorX = inputFocused->startPointX + 1 + inputFocused->textSize;
-    
+
         renderText(cursorX, centerYPos, " ");
 
         --inputFocused->textSize;
@@ -308,10 +312,12 @@ void handleInputText(unsigned short key)
             error("Falha ao realocar memoria no input");
     }
 
-    else if (key >= 32 && key <= 126 && inputFocused->textSize < inputFocused->width){
+    else if (key >= 32 && key <= 126 && (inputFocused->textSize + 1) < (inputFocused->width - 1))
+    {
         ++inputFocused->textSize;
         char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
-        if (newText){
+        if (newText)
+        {
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize - 1] = key;
             inputFocused->text[inputFocused->textSize] = '\0';
@@ -365,7 +371,7 @@ void handleEvents()
 
     if (kbhit() && key == 27 && !hasInputFocused)
         setIsOpen(FALSE);
-    else if(hasInputFocused)
+    else if (hasInputFocused)
         handleInputText(key);
 
 #elif defined(__linux__)
@@ -390,7 +396,7 @@ void handleEvents()
 
     if (ch == 'q' && !hasInputFocused)
         setIsOpen(FALSE);
-    else if(hasInputFocused)
+    else if (hasInputFocused)
         handleInputText(ch);
 
     refresh();
