@@ -11,11 +11,11 @@ typedef struct
 {
     unsigned short width;
     unsigned short height;
-
     unsigned short startPointX;
     unsigned short startPointY;
 
     const char *text;
+    
     void (*onClick)();
 } Button;
 
@@ -25,11 +25,13 @@ typedef struct
     unsigned short height;
     unsigned short startPointX;
     unsigned short startPointY;
+    
     char *text;
     unsigned short textSize;
     const char *label;
     const char *value;
     const char *type;
+    
     boolean focused;
 } Input;
 
