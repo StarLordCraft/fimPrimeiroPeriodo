@@ -339,12 +339,12 @@ void handleInputText(unsigned short key)
         {
             inputFocused->text = newText;
 
-            renderText((inputFocused->cursor + inputFocused->startPointX + 1), (inputFocused->startPointY + 1), " ");
+            renderText((inputFocused->textSize + inputFocused->startPointX + 2), (inputFocused->startPointY + 1), " ");
 
             moveCursor(inputFocused->cursor - 1);
-            for (int i = inputFocused->cursor + 1; i < inputFocused->textSize; ++i)
-                if (i != inputFocused->cursor)
-                    inputFocused->text[i] = inputFocused->text[1 + i];
+            for (int i = inputFocused->cursor + 1; i < inputFocused->textSize + 1; ++i)
+                inputFocused->text[i] = inputFocused->text[i + 1];
+            
 
             inputFocused->text[inputFocused->textSize + 1] = '\0';
         }
@@ -359,21 +359,26 @@ void handleInputText(unsigned short key)
         if (newText)
         {
             inputFocused->text = newText;
-            inputFocused->text[inputFocused->textSize - 1] = key;
+            moveCursor(inputFocused->cursor + 1);
+
+            for (int i = inputFocused->cursor + 1; i < inputFocused->textSize; ++i)
+                if (i != inputFocused->cursor)
+                    inputFocused->text[i - 1] = inputFocused->text[i];
+
+            inputFocused->text[inputFocused->cursor - 1] = key;
             inputFocused->text[inputFocused->textSize + 1] = '\0';
         }
         else
             error("Falha ao realocar memoria no input");
-    } /*else if (key == KEY_LEFT){
-         if((cursorX - 1) >= inputFocused->startPointX + 1){
-             renderText(cursorX, cursorY, " ");
-             --cursorX;
-         }
+    } else if (key == KEY_LEFT){
+         if((inputFocused->cursor - 1) >= 0)
+             moveCursor(inputFocused->cursor - 1);
 
      }else if (key == KEY_RIGHT){
-         if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize + 1))
-             ++cursorX;
-     }*/
+         if((inputFocused->cursor + 1) <= inputFocused->textSize + 1)
+            moveCursor(inputFocused->cursor + 1);
+             
+     }
 }
 
 /**
