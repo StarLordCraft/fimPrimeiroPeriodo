@@ -29,6 +29,7 @@ typedef struct
     unsigned short textSize;
     const char *label;
     const char *value;
+    const char *type;
     boolean focused;
 } Input;
 
@@ -200,10 +201,12 @@ void renderInput(Input *input)
  * @param startPointX Posicionamento no eixo X do Input
  * @param startPointY Posicionamento no eixo Y do Input
  * @param label Texto de call to action do Input
+ * @param value tipo um id a ser tratado la no backend
+ * @param type tipo de input
  * @return Input retorna um elemento de interação renderizável na tela
  */
 Input *createInput(unsigned short width, unsigned short startPointX, unsigned short startPointY,
-                   const char *label)
+                   const char *label, const char *value, const char *type)
 {
     if (screenInputs)
         for (int i = 0; i < numScreenInputs; ++i)
@@ -223,6 +226,16 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->text = NULL;
     newInput->focused = FALSE;
     newInput->textSize = 0;
+    newInput->value = value;
+
+    if (strcmp(type, "password") == 0 || strcmp(type, "email") == 0 || strcmp(type, "text") == 0 || strcmp(type, "number") == 0)
+        newInput->type = type;
+    else
+    {
+        char errorMessage[100];
+        snprintf(errorMessage, sizeof(errorMessage), "Tipo de input %s indefinido", type);
+        error(errorMessage);
+    }
 
     renderInput(newInput);
     addInputToScreen(newInput);
