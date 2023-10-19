@@ -26,13 +26,13 @@ typedef struct
     unsigned short startPointX;
     unsigned short startPointY;
     unsigned short cursor;
-    
+
     char *text;
     unsigned short textSize;
     const char *label;
     const char *value;
     const char *type;
-    
+
     bool focused;
 } Input;
 
@@ -179,16 +179,17 @@ void renderInput(Input *input)
     createBorder(box, 1, "-");
 
     if (input->text)
-        renderText(input->startPointX + 1, getCenterPos(box,0, FALSE, TRUE)[1], input->text);
-
-    if (input->focused)
     {
-        if (cursorVisible)
-            input->text[input->cursor] = '|';
-        else
-            input->text[input->cursor] = ' ';
+        renderText(input->startPointX + 1, getCenterPos(box, 0, FALSE, TRUE)[1], input->text);
+        if (input->focused)
+        {
+            if (cursorVisible)
+                input->text[input->cursor] = '|';
+            else
+                input->text[input->cursor] = ' ';
 
-        cursorVisible = !cursorVisible;
+            cursorVisible = !cursorVisible;
+        }
     }
 
     free(box);
@@ -233,7 +234,8 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     else
     {
         char errorMessage[40] = "Tipo de input";
-        strcat(errorMessage, type); strcat(errorMessage, "indefinido");
+        strcat(errorMessage, type);
+        strcat(errorMessage, "indefinido");
         error(errorMessage);
     }
 
@@ -245,13 +247,14 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
 
 /**
  * @brief move o cursor para uma determinada posição no text
- * 
+ *
  * @param to pra onde o cursor vai
  * @return void
-*/
+ */
 void moveCursor(unsigned short to)
 {
-    if(to >= 0 && to <= inputFocused->textSize){
+    if (to >= 0 && to <= inputFocused->textSize)
+    {
         inputFocused->text[inputFocused->cursor] = inputFocused->text[to];
         inputFocused->cursor = to;
     }
@@ -259,21 +262,24 @@ void moveCursor(unsigned short to)
 
 /**
  * @brief preserva o texto e remove o cursor dele.
- * 
+ *
  * @return void
-*/
+ */
 void removeCursor()
 {
     char *newText = malloc(sizeof(char) * (inputFocused->textSize + 1));
-    for(int i = 0; i <= inputFocused->textSize; ++i)
-        if(i != inputFocused->cursor)newText[i] = inputFocused->text[i];
-        else newText[i] = inputFocused->text[1 + i];
-    
+    for (int i = 0; i <= inputFocused->textSize; ++i)
+        if (i != inputFocused->cursor)
+            newText[i] = inputFocused->text[i];
+        else
+            newText[i] = inputFocused->text[1 + i];
+
     inputFocused->cursor = inputFocused->textSize;
 
     newText[inputFocused->cursor] = '\0';
 
-    free(inputFocused->text); inputFocused->text = newText;  
+    free(inputFocused->text);
+    inputFocused->text = newText;
 }
 
 /**
@@ -287,12 +293,13 @@ void setFocusInput(Input *input)
     for (int i = 0; i < numScreenInputs; ++i)
         screenInputs[i].focused = FALSE;
 
-    if(inputFocused != NULL)removeCursor();
+    if (inputFocused)
+        removeCursor();
 
     input->focused = TRUE;
     inputFocused = input;
     cursorVisible = TRUE;
-    
+
     input->cursor = input->textSize;
 }
 
@@ -327,17 +334,19 @@ void handleInputText(unsigned short key)
     if (key == KEY_BACKSPACE && inputFocused->textSize > 0 && inputFocused->cursor > 0)
     {
         --inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
         if (newText != NULL)
         {
-            inputFocused->text = newText; 
+            inputFocused->text = newText;
+
+            renderText((inputFocused->cursor + inputFocused->startPointX + 1), (inputFocused->startPointY + 1), " ");
 
             moveCursor(inputFocused->cursor - 1);
-            for(int i = inputFocused->cursor + 1; i < inputFocused->textSize - 1; ++i)
-                if(i != inputFocused->cursor)inputFocused->text[i] = inputFocused->text[1 + i];
-            
-            inputFocused->text[inputFocused->textSize] = '\0';
-            
+            for (int i = inputFocused->cursor + 1; i < inputFocused->textSize; ++i)
+                if (i != inputFocused->cursor)
+                    inputFocused->text[i] = inputFocused->text[1 + i];
+
+            inputFocused->text[inputFocused->textSize + 1] = '\0';
         }
         else
             error("Falha ao realocar memoria no input");
@@ -351,21 +360,20 @@ void handleInputText(unsigned short key)
         {
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize - 1] = key;
-            inputFocused->text[inputFocused->textSize] = '\0';
-            //++cursorX;
+            inputFocused->text[inputFocused->textSize + 1] = '\0';
         }
         else
             error("Falha ao realocar memoria no input");
-    }/*else if (key == KEY_LEFT){
-        if((cursorX - 1) >= inputFocused->startPointX + 1){
-            renderText(cursorX, cursorY, " ");
-            --cursorX;
-        }
+    } /*else if (key == KEY_LEFT){
+         if((cursorX - 1) >= inputFocused->startPointX + 1){
+             renderText(cursorX, cursorY, " ");
+             --cursorX;
+         }
 
-    }else if (key == KEY_RIGHT){
-        if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize + 1))
-            ++cursorX;   
-    }*/
+     }else if (key == KEY_RIGHT){
+         if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize + 1))
+             ++cursorX;
+     }*/
 }
 
 /**
