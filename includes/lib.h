@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "keys.h"
 
 #ifdef _WIN32
     #include <windows.h>

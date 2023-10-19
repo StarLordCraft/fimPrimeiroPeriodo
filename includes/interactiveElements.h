@@ -15,7 +15,7 @@ typedef struct
     unsigned short startPointY;
 
     const char *text;
-    
+
     void (*onClick)();
 } Button;
 
@@ -44,6 +44,9 @@ unsigned short numScreenInputs = 0;
 Input *inputFocused = NULL;
 
 boolean cursorVisible = TRUE;
+
+unsigned short cursorX;
+unsigned short cursorY;
 /// @endparblock end Global Variables
 
 /**
@@ -184,7 +187,7 @@ void renderInput(Input *input)
 
     if (input->focused)
     {
-        unsigned short cursorX = input->startPointX + 1 + input->textSize;
+        cursorX = input->startPointX + 1 + input->textSize;
         if (cursorVisible)
             renderText(cursorX, posRenderTextY, "|");
         else
@@ -254,10 +257,10 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
 void removeInputFocus(Input *input)
 {
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
-    unsigned short centerYPos = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
-    unsigned short cursorX = input->startPointX + 1 + input->textSize;
+    cursorY = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
+    cursorX = input->startPointX + 1 + input->textSize;
 
-    renderText(cursorX, centerYPos, " ");
+    renderText(cursorX, cursorY, " ");
 
     input->focused = FALSE;
 
@@ -308,13 +311,13 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
  */
 void handleInputText(unsigned short key)
 {
-    if (key == 0407 && strlen(inputFocused->text) > 0)
+    if (key == KEY_BACKSPACE && strlen(inputFocused->text) > 0)
     {
         Box *box = createBox(inputFocused->width, inputFocused->height, inputFocused->startPointX, inputFocused->startPointY);
-        unsigned short centerYPos = getCenterPos(box, inputFocused->textSize, FALSE, TRUE)[1];
-        unsigned short cursorX = inputFocused->startPointX + 1 + inputFocused->textSize;
+        cursorY = getCenterPos(box, inputFocused->textSize, FALSE, TRUE)[1];
+        cursorX = inputFocused->startPointX + 1 + inputFocused->textSize;
 
-        renderText(cursorX, centerYPos, " ");
+        renderText(cursorX, cursorY, " ");
 
         --inputFocused->textSize;
         char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
