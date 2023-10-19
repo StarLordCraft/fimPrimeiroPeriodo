@@ -25,6 +25,7 @@ typedef struct
     unsigned short height;
     unsigned short startPointX;
     unsigned short startPointY;
+    unsigned short cursor;
     
     char *text;
     unsigned short textSize;
@@ -44,9 +45,6 @@ unsigned short numScreenInputs = 0;
 Input *inputFocused = NULL;
 
 boolean cursorVisible = TRUE;
-
-unsigned short cursorX;
-unsigned short cursorY;
 /// @endparblock end Global Variables
 
 /**
@@ -181,17 +179,17 @@ void renderInput(Input *input)
     createBorder(box, 1, "-");
 
     if (input->text)
-        renderText(input->startPointX + 1, cursorY, input->text);
+        renderText(input->startPointX + 1, getCenterPos(box,0, FALSE, TRUE)[1], input->text);
 
     if (input->focused)
     {
         if (cursorVisible)
-            renderText(cursorX, cursorY, "|");
+            input->text[input->cursor] = '|';
         else
-            renderText(cursorX, cursorY, " ");
+            input->text[input->cursor] = ' ';
 
         cursorVisible = !cursorVisible;
-    }
+    }else input->text[input->cursor] = '\0';
 
     free(box);
 }
@@ -234,8 +232,8 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
         newInput->type = type;
     else
     {
-        char errorMessage[100];
-        snprintf(errorMessage, sizeof(errorMessage), "Tipo de input %s indefinido", type);
+        char errorMessage[40] = "Tipo de input";
+        strcat(errorMessage, type); strcat(errorMessage, "indefinido");
         error(errorMessage);
     }
 
@@ -246,26 +244,41 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
 }
 
 /**
- * @brief remove input focus and the cursor
- *
- * @param input input to has the focus removed
+ * @brief move o cursor para uma determinada posição no text
+ * 
+ * @param to pra onde o cursor vai
  * @return void
- */
-void removeInputFocus(Input *input)
+*/
+void moveCursor(unsigned short to)
 {
-    Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
-    cursorY = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
-    cursorX = input->startPointX + 1 + input->textSize;
-
-    renderText(cursorX, cursorY, " ");
-
-    input->focused = FALSE;
-
-    free(box);
+    if(to >= 0 && to <= inputFocused->textSize){
+        inputFocused->text[inputFocused->cursor] = inputFocused->text[to];
+        inputFocused->cursor = to;
+    }
 }
 
 /**
- * @brief Define o foco de um input como TRUE e o resto pra FALSE
+ * @brief preserva o texto e remove o cursor dele.
+ * 
+ * @return void
+*/
+void removeCursor()
+{
+    char *newText = malloc(sizeof(char) * (inputFocused->textSize + 1));
+    for(int i = 0; i <= inputFocused->textSize; ++i)
+        if(i != inputFocused->cursor)newText[i] = inputFocused->text[i];
+        else newText[i] = inputFocused->text[1 + i];
+    
+    inputFocused->cursor = inputFocused->textSize + 1;
+    
+    newText[inputFocused->cursor] = '\0';
+
+
+    free(inputFocused->text); inputFocused->text = newText;  
+}
+
+/**
+ * @brief Define o foco de um input como TRUE e o resto pra FALSE e remove o cursor do antigo input com foco se houver
  *
  * @param input input a ter foco
  * @return void
@@ -273,14 +286,15 @@ void removeInputFocus(Input *input)
 void setFocusInput(Input *input)
 {
     for (int i = 0; i < numScreenInputs; ++i)
-        removeInputFocus(&screenInputs[i]);
+        screenInputs[i].focused = FALSE;
+
+    if(inputFocused)removeCursor();
 
     input->focused = TRUE;
     inputFocused = input;
     cursorVisible = TRUE;
-    cursorX = input->startPointX + 1 + input->textSize;
-    cursorY = getCenterPos(createBox(input->width, input->height, input->startPointX, input->startPointY),
-    0, FALSE, TRUE)[1];
+    
+    input->cursor = input->textSize;
 }
 
 /**
@@ -299,7 +313,7 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
     else
     {
         inputFocused = NULL;
-        removeInputFocus(input);
+        input->focused = FALSE;
     }
 }
 
@@ -322,7 +336,7 @@ void handleInputText(unsigned short key)
         {
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize] = '\0';
-            renderText((inputFocused->startPointX + inputFocused->textSize + 2), cursorY, " ");
+            renderText((inputFocused->startPointX + inputFocused->textSize + 1), cursorY, " ");
         }
         else
             error("Falha ao realocar memoria no input");
@@ -341,13 +355,16 @@ void handleInputText(unsigned short key)
         }
         else
             error("Falha ao realocar memoria no input");
-    }else if (key == KEY_LEFT)
+    }else if (key == KEY_LEFT){
         if((cursorX - 1) >= inputFocused->startPointX + 1){
+            renderText(cursorX, cursorY, " ");
             --cursorX;
         }
-    else if (key == KEY_RIGHT)
-        if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize)) ++cursorX;
-    
+
+    }else if (key == KEY_RIGHT){
+        if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize + 1))
+            ++cursorX;   
+    }
 }
 
 /**

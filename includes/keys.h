@@ -10,15 +10,5 @@
 #define KEY_BACKSPACE   8
 #define KEY_ENTER       13      /* tecla Enter */
 
-#else
-
-#define KEY_DOWN        0402    /* down-arrow key */
-#define KEY_UP          0403    /* up-arrow key */
-#define KEY_LEFT        0404    /* left-arrow key */
-#define KEY_RIGHT       0405    /* right-arrow key */
-#define KEY_BACKSPACE   0407
-#define KEY_ENTER       012     /* tecla Enter */
-
 #endif
-
 #endif
