@@ -3,11 +3,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "keys.h"
 
 #ifdef _WIN32
     #include <windows.h>
 #else
+    #include <sys/ioctl.h>
+    #include <unistd.h>
+    #include <ncurses.h>
     #include <unistd.h>
 #endif
 
@@ -56,9 +60,4 @@ void wait(unsigned int milliseconds)
         usleep(milliseconds * 1000);
     #endif
 }
-
-typedef enum {
-    FALSE,
-    TRUE,
-} boolean;
 #endif

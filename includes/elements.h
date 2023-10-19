@@ -4,22 +4,16 @@
 #include <string.h>
 #include "lib.h"
 
-#ifdef __linux__
-    #include <sys/ioctl.h>
-    #include <unistd.h>
-    #include <ncurses.h>
-#endif
-
 /// @brief @section GLOBAL VARIABLES
-boolean open = TRUE;
+bool open = TRUE;
 /// @endparblock
 
 /**
  * @brief checa se a window ta aberta
  *
- * @return boolean true se estiver rodando false senão
+ * @return bool true se estiver rodando false senão
  */
-boolean isOpen()
+bool isOpen()
 { return open; }
 
 /**
@@ -28,7 +22,7 @@ boolean isOpen()
  * @param state o novo estado da window
  * @return void
  */
-void setIsOpen(boolean state)
+void setIsOpen(bool state)
 { open = state; }
 
 /// @brief
@@ -167,7 +161,7 @@ void createBorder(Box *box, unsigned short borderSize, const char *border)
  *
  * @return int* Um array contendo as coordenadas x e y que centralizam o elemento.
  */
-unsigned short *getCenterPos(Box *boxRelative, unsigned short textLength, boolean horizontal, boolean vertical)
+unsigned short *getCenterPos(Box *boxRelative, unsigned short textLength, bool horizontal, bool vertical)
 {
     unsigned short *positions = (unsigned short *)malloc(sizeof(unsigned short) * 2);
 

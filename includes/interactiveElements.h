@@ -33,7 +33,7 @@ typedef struct
     const char *value;
     const char *type;
     
-    boolean focused;
+    bool focused;
 } Input;
 
 /// @section Global Variables
@@ -44,7 +44,7 @@ Input *screenInputs = NULL;
 unsigned short numScreenInputs = 0;
 Input *inputFocused = NULL;
 
-boolean cursorVisible = TRUE;
+bool cursorVisible = TRUE;
 /// @endparblock end Global Variables
 
 /**
@@ -189,7 +189,7 @@ void renderInput(Input *input)
             input->text[input->cursor] = ' ';
 
         cursorVisible = !cursorVisible;
-    }else input->text[input->cursor] = '\0';
+    }
 
     free(box);
 }
@@ -269,10 +269,9 @@ void removeCursor()
         if(i != inputFocused->cursor)newText[i] = inputFocused->text[i];
         else newText[i] = inputFocused->text[1 + i];
     
-    inputFocused->cursor = inputFocused->textSize + 1;
-    
-    newText[inputFocused->cursor] = '\0';
+    inputFocused->cursor = inputFocused->textSize;
 
+    newText[inputFocused->cursor] = '\0';
 
     free(inputFocused->text); inputFocused->text = newText;  
 }
@@ -288,7 +287,7 @@ void setFocusInput(Input *input)
     for (int i = 0; i < numScreenInputs; ++i)
         screenInputs[i].focused = FALSE;
 
-    if(inputFocused)removeCursor();
+    if(inputFocused != NULL)removeCursor();
 
     input->focused = TRUE;
     inputFocused = input;
@@ -325,18 +324,20 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
  */
 void handleInputText(unsigned short key)
 {
-    if (key == KEY_BACKSPACE && strlen(inputFocused->text) > 0)
+    if (key == KEY_BACKSPACE && inputFocused->textSize > 0 && inputFocused->cursor > 0)
     {
-        renderText(cursorX, cursorY, " ");
-        --cursorX;
-
         --inputFocused->textSize;
         char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
         if (newText != NULL)
         {
-            inputFocused->text = newText;
+            inputFocused->text = newText; 
+
+            moveCursor(inputFocused->cursor - 1);
+            for(int i = inputFocused->cursor + 1; i < inputFocused->textSize - 1; ++i)
+                if(i != inputFocused->cursor)inputFocused->text[i] = inputFocused->text[1 + i];
+            
             inputFocused->text[inputFocused->textSize] = '\0';
-            renderText((inputFocused->startPointX + inputFocused->textSize + 1), cursorY, " ");
+            
         }
         else
             error("Falha ao realocar memoria no input");
@@ -345,17 +346,17 @@ void handleInputText(unsigned short key)
     else if (key >= 32 && key <= 126 && (inputFocused->textSize + 1) < (inputFocused->width - 1))
     {
         ++inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
         if (newText)
         {
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize - 1] = key;
             inputFocused->text[inputFocused->textSize] = '\0';
-            ++cursorX;
+            //++cursorX;
         }
         else
             error("Falha ao realocar memoria no input");
-    }else if (key == KEY_LEFT){
+    }/*else if (key == KEY_LEFT){
         if((cursorX - 1) >= inputFocused->startPointX + 1){
             renderText(cursorX, cursorY, " ");
             --cursorX;
@@ -364,7 +365,7 @@ void handleInputText(unsigned short key)
     }else if (key == KEY_RIGHT){
         if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize + 1))
             ++cursorX;   
-    }
+    }*/
 }
 
 /**
@@ -383,7 +384,7 @@ void freeScreenInputs()
 /**
  * @brief recebe eventos e computa eles seja clique input de teclado...
  *
- * @return boolean - se deve ou não parar o programa
+ * @return bool - se deve ou não parar o programa
  */
 void handleEvents()
 {
@@ -407,7 +408,7 @@ void handleEvents()
     }
     unsigned short key = getch();
 
-    boolean hasInputFocused = !(inputFocused == NULL);
+    bool hasInputFocused = !(inputFocused == NULL);
 
     if (kbhit() && key == 27 && !hasInputFocused)
         setIsOpen(FALSE);
@@ -432,7 +433,7 @@ void handleEvents()
             }
     }
 
-    boolean hasInputFocused = !(inputFocused == NULL);
+    bool hasInputFocused = !(inputFocused == NULL);
 
     if (ch == 'q' && !hasInputFocused)
         setIsOpen(FALSE);
