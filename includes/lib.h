@@ -19,6 +19,9 @@
 void error(char *message)
 {
     fprintf(stderr, "Error: %s\n", message);
+    #ifdef __linux__
+        endwin();
+    #endif
     exit(1);
 }
 
