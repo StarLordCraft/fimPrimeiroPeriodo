@@ -180,18 +180,15 @@ void renderInput(Input *input)
     Box *box = createBox(input->width, input->height, input->startPointX, input->startPointY);
     createBorder(box, 1, "-");
 
-    unsigned short posRenderTextY = getCenterPos(box, input->textSize, FALSE, TRUE)[1];
-
     if (input->text)
-        renderText(input->startPointX + 1, posRenderTextY, input->text);
+        renderText(input->startPointX + 1, cursorY, input->text);
 
     if (input->focused)
     {
-        cursorX = input->startPointX + 1 + input->textSize;
         if (cursorVisible)
-            renderText(cursorX, posRenderTextY, "|");
+            renderText(cursorX, cursorY, "|");
         else
-            renderText(cursorX, posRenderTextY, " ");
+            renderText(cursorX, cursorY, " ");
 
         cursorVisible = !cursorVisible;
     }
@@ -281,6 +278,9 @@ void setFocusInput(Input *input)
     input->focused = TRUE;
     inputFocused = input;
     cursorVisible = TRUE;
+    cursorX = input->startPointX + 1 + input->textSize;
+    cursorY = getCenterPos(createBox(input->width, input->height, input->startPointX, input->startPointY),
+    0, FALSE, TRUE)[1];
 }
 
 /**
@@ -313,11 +313,8 @@ void handleInputText(unsigned short key)
 {
     if (key == KEY_BACKSPACE && strlen(inputFocused->text) > 0)
     {
-        Box *box = createBox(inputFocused->width, inputFocused->height, inputFocused->startPointX, inputFocused->startPointY);
-        cursorY = getCenterPos(box, inputFocused->textSize, FALSE, TRUE)[1];
-        cursorX = inputFocused->startPointX + 1 + inputFocused->textSize;
-
         renderText(cursorX, cursorY, " ");
+        --cursorX;
 
         --inputFocused->textSize;
         char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
@@ -325,6 +322,7 @@ void handleInputText(unsigned short key)
         {
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize] = '\0';
+            renderText((inputFocused->startPointX + inputFocused->textSize + 2), cursorY, " ");
         }
         else
             error("Falha ao realocar memoria no input");
@@ -339,10 +337,17 @@ void handleInputText(unsigned short key)
             inputFocused->text = newText;
             inputFocused->text[inputFocused->textSize - 1] = key;
             inputFocused->text[inputFocused->textSize] = '\0';
+            ++cursorX;
         }
         else
             error("Falha ao realocar memoria no input");
-    }
+    }else if (key == KEY_LEFT)
+        if((cursorX - 1) >= inputFocused->startPointX + 1){
+            --cursorX;
+        }
+    else if (key == KEY_RIGHT)
+        if((cursorX + 1) <= (inputFocused->startPointX + inputFocused->textSize)) ++cursorX;
+    
 }
 
 /**

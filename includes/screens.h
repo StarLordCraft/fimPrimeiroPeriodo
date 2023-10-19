@@ -89,7 +89,7 @@ void renderMenu()
 void renderLogin()
 {
     Box *window = initScreen(1);
-    Input *Email = createInput(64, 10, 10, "Email:", "email", "cu");
+    Input *Email = createInput(64, 10, 10, "Email:", "email", "password");
 
     free(window);
 }
