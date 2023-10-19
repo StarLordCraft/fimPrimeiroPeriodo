@@ -9,7 +9,6 @@
 #define KEY_RIGHT       39      /* right-arrow key */
 #define KEY_BACKSPACE   8
 #define KEY_ENTER       13      /* tecla Enter */
-#define KEY_SPACE       32      /* tecla Espaço */
 
 #else
 
@@ -19,7 +18,6 @@
 #define KEY_RIGHT       0405    /* right-arrow key */
 #define KEY_BACKSPACE   0407
 #define KEY_ENTER       012     /* tecla Enter */
-#define KEY_SPACE       040     /* tecla Espaço */
 
 #endif
 
