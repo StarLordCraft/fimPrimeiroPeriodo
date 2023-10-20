@@ -112,6 +112,7 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
     newButton->startPointX = startPointX;
     newButton->startPointY = startPointY;
     newButton->text = label;
+
     newButton->onClick = callBack;
 
     renderButton(newButton);
@@ -224,7 +225,9 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->startPointX = startPointX;
     newInput->startPointY = startPointY;
     newInput->label = label;
-    newInput->text = (char *) malloc(sizeof(char) * 2); newInput->text[0] = ' '; newInput->text[1] = '\0'; 
+    newInput->text = (char *)malloc(sizeof(char) * 2);
+    newInput->text[0] = ' ';
+    newInput->text[1] = '\0';
     newInput->textSize = 0;
     newInput->focused = FALSE;
     newInput->value = value;
@@ -233,10 +236,13 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
         newInput->type = type;
     else
     {
-        char errorMessage[40] = "Tipo de input";
-        strcat(errorMessage, type);
-        strcat(errorMessage, "indefinido");
-        error("Tipo de input indefinido");
+        char *errorMessage = (char *)malloc(sizeof(char) * 40);
+
+        errorMessage = strcat(errorMessage, "Tipo de input: ");
+        errorMessage = strcat(errorMessage, type);
+        errorMessage = strcat(errorMessage, "indefinido");
+
+        error(errorMessage);
     }
 
     renderInput(newInput);
@@ -271,9 +277,8 @@ void removeCursor(Input *input)
     {
         if (input->textSize > 0 && input->textSize > input->cursor)
         {
-            while(input->cursor != input->textSize)
+            while (input->cursor != input->textSize)
                 moveCursor(input, input->cursor + 1);
-
         }
         input->text[input->cursor] = '\0';
         renderText((input->startPointX + input->textSize + 1), (input->startPointY + 1), " ");
@@ -290,7 +295,6 @@ void setFocusInput(Input *input)
 {
     for (int i = 0; i < numScreenInputs; ++i)
         screenInputs[i].focused = FALSE;
-
 
     input->focused = TRUE;
     inputFocused = input;
@@ -325,7 +329,24 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
  */
 void handleInputText(unsigned short key)
 {
-    if (key == KEY_BACKSPACE && inputFocused->textSize > 0 && inputFocused->cursor > 0)
+    if (KEY_ENTER == key || '\n' == key)
+    {
+        for (unsigned short i = 0; i < numScreenInputs; ++i)
+            if (&screenInputs[i] == inputFocused)
+            {
+                if (i < numScreenInputs - 1){
+                    removeCursor(inputFocused);
+                    handleInputClickEvent(&screenInputs[1 + i], screenInputs[1 + i].startPointX + 1, screenInputs[1 + i].startPointY + 1);
+                }
+                else
+                {
+                    if ((numScreenButtons > 0))
+                        screenButtons[numScreenButtons - 1].onClick();
+                }
+                break;
+            }
+    }
+    else if (KEY_BACKSPACE == key && inputFocused->textSize > 0 && inputFocused->cursor > 0)
     {
         --inputFocused->textSize;
         char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
@@ -344,7 +365,6 @@ void handleInputText(unsigned short key)
         else
             error("Falha ao realocar memoria no input");
     }
-
     else if (key >= 32 && key <= 126 && (inputFocused->textSize + 1) < (inputFocused->width - 1))
     {
         ++inputFocused->textSize;
@@ -363,12 +383,12 @@ void handleInputText(unsigned short key)
         else
             error("Falha ao realocar memoria no input");
     }
-    else if (key == KEY_LEFT)
+    else if (KEY_LEFT == key)
     {
         if ((inputFocused->cursor - 1) >= 0)
             moveCursor(inputFocused, inputFocused->cursor - 1);
     }
-    else if (key == KEY_RIGHT)
+    else if (KEY_RIGHT == key)
     {
         if ((inputFocused->cursor + 1) <= inputFocused->textSize + 1)
             moveCursor(inputFocused, inputFocused->cursor + 1);
