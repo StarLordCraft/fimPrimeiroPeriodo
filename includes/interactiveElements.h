@@ -186,7 +186,7 @@ void renderInput(Input *input)
             if (cursorVisible)
                 input->text[input->cursor] = '|';
             else
-                input->text[input->cursor] = '|';
+                input->text[input->cursor] = ' ';
 
             cursorVisible = !cursorVisible;
         }
@@ -251,12 +251,12 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
  * @param to pra onde o cursor vai
  * @return void
  */
-void moveCursor(unsigned short to)
+void moveCursor(Input *input, unsigned short to)
 {
-    if (to >= 0 && to <= inputFocused->textSize)
+    if (to >= 0 && to <= input->textSize)
     {
-        inputFocused->text[inputFocused->cursor] = inputFocused->text[to];
-        inputFocused->cursor = to;
+        input->text[input->cursor] = input->text[to];
+        input->cursor = to;
     }
 }
 
@@ -269,13 +269,15 @@ void removeCursor(Input *input)
 {
     if (input != NULL && input->text != NULL && input->cursor >= 0)
     {
-        if (input->textSize > 0)
+        if (input->textSize > 0 && input->textSize > input->cursor)
         {
-            while(input->cursor != input->textSize + 1)
-                moveCursor(input->cursor + 1);
+            while(input->cursor != input->textSize)
+                moveCursor(input, input->cursor + 1);
 
-            input->text[input->cursor] = '\0';
+            renderText((input->startPointX + input->textSize + 1), (input->startPointY + 1), " ");
         }
+
+        input->text[input->cursor] = '\0';
     }
 }
 
@@ -295,7 +297,7 @@ void setFocusInput(Input *input)
     inputFocused = input;
     cursorVisible = TRUE;
 
-    input->cursor = input->textSize + 1;
+    input->cursor = input->textSize;
 }
 
 /**
@@ -334,7 +336,7 @@ void handleInputText(unsigned short key)
 
             renderText((inputFocused->textSize + inputFocused->startPointX + 2), (inputFocused->startPointY + 1), " ");
 
-            moveCursor(inputFocused->cursor - 1);
+            moveCursor(inputFocused, inputFocused->cursor - 1);
             for (int i = inputFocused->cursor + 1; i < inputFocused->textSize + 1; ++i)
                 inputFocused->text[i] = inputFocused->text[i + 1];
 
@@ -352,7 +354,7 @@ void handleInputText(unsigned short key)
         {
             inputFocused->text = newText;
 
-            moveCursor(inputFocused->cursor + 1);
+            moveCursor(inputFocused, inputFocused->cursor + 1);
             for (int i = inputFocused->textSize; i > inputFocused->cursor; --i)
                 inputFocused->text[i] = inputFocused->text[i - 1];
 
@@ -365,12 +367,12 @@ void handleInputText(unsigned short key)
     else if (key == KEY_LEFT)
     {
         if ((inputFocused->cursor - 1) >= 0)
-            moveCursor(inputFocused->cursor - 1);
+            moveCursor(inputFocused, inputFocused->cursor - 1);
     }
     else if (key == KEY_RIGHT)
     {
         if ((inputFocused->cursor + 1) <= inputFocused->textSize + 1)
-            moveCursor(inputFocused->cursor + 1);
+            moveCursor(inputFocused, inputFocused->cursor + 1);
     }
 }
 
