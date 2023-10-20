@@ -224,7 +224,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->startPointX = startPointX;
     newInput->startPointY = startPointY;
     newInput->label = label;
-    newInput->text = NULL;
+    newInput->text = (char *) malloc(sizeof(char) * 2); newInput->text[0] = ' '; newInput->text[1] = '\0'; 
     newInput->focused = FALSE;
     newInput->textSize = 0;
     newInput->value = value;
@@ -274,10 +274,9 @@ void removeCursor(Input *input)
             while(input->cursor != input->textSize)
                 moveCursor(input, input->cursor + 1);
 
-            renderText((input->startPointX + input->textSize + 1), (input->startPointY + 1), " ");
         }
-
         input->text[input->cursor] = '\0';
+        renderText((input->startPointX + input->textSize + 1), (input->startPointY + 1), " ");
     }
 }
 
@@ -329,7 +328,7 @@ void handleInputText(unsigned short key)
     if (key == KEY_BACKSPACE && inputFocused->textSize > 0 && inputFocused->cursor > 0)
     {
         --inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
         if (newText != NULL)
         {
             inputFocused->text = newText;
@@ -349,7 +348,7 @@ void handleInputText(unsigned short key)
     else if (key >= 32 && key <= 126 && (inputFocused->textSize + 1) < (inputFocused->width - 1))
     {
         ++inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
         if (newText)
         {
             inputFocused->text = newText;
