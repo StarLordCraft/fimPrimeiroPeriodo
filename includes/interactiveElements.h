@@ -225,8 +225,8 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->startPointY = startPointY;
     newInput->label = label;
     newInput->text = (char *) malloc(sizeof(char) * 2); newInput->text[0] = ' '; newInput->text[1] = '\0'; 
-    newInput->focused = FALSE;
     newInput->textSize = 0;
+    newInput->focused = FALSE;
     newInput->value = value;
 
     if (strcmp(type, "password") == 0 || strcmp(type, "email") == 0 || strcmp(type, "text") == 0 || strcmp(type, "number") == 0)
@@ -328,7 +328,7 @@ void handleInputText(unsigned short key)
     if (key == KEY_BACKSPACE && inputFocused->textSize > 0 && inputFocused->cursor > 0)
     {
         --inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
         if (newText != NULL)
         {
             inputFocused->text = newText;
@@ -348,7 +348,7 @@ void handleInputText(unsigned short key)
     else if (key >= 32 && key <= 126 && (inputFocused->textSize + 1) < (inputFocused->width - 1))
     {
         ++inputFocused->textSize;
-        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 1) * sizeof(char));
+        char *newText = (char *)realloc(inputFocused->text, (inputFocused->textSize + 2) * sizeof(char));
         if (newText)
         {
             inputFocused->text = newText;
