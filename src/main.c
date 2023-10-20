@@ -1,7 +1,10 @@
 #include "screens.h"
 
 int main(int argc, char **argv) {
-    configureConsole();
+    setIsOpen(TRUE);
+    #ifdef __linux__
+        configureConsole();
+    #endif
 
     RenderScreen *screens = getScreens(); 
 

@@ -14,7 +14,9 @@ bool open = TRUE;
  * @return bool true se estiver rodando false senão
  */
 bool isOpen()
-{ return open; }
+{
+    return open;
+}
 
 /**
  * @brief define o estado da window
@@ -23,7 +25,9 @@ bool isOpen()
  * @return void
  */
 void setIsOpen(bool state)
-{ open = state; }
+{
+    open = state;
+}
 
 /// @brief
 /*
@@ -71,22 +75,12 @@ unsigned short *getWindowSize()
  */
 void configureConsole()
 {
-    open = TRUE;
-#ifdef _WIN32
-    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD fdwMode = ENABLE_EXTENDED_FLAGS | ENABLE_MOUSE_INPUT;
-    SetConsoleMode(hInput, fdwMode);
-
-    INPUT_RECORD irInBuf[128];
-    DWORD cNumRead;
-#elif defined(__linux__)
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
     timeout(0);
-#endif
 }
 
 /**
@@ -161,11 +155,11 @@ void createBorder(Box *box, unsigned short borderSize, const char *border)
  *
  * @return int* Um array contendo as coordenadas x e y que centralizam o elemento.
  */
-unsigned short *getCenterPos(Box *boxRelative, unsigned short textLength, bool horizontal, bool vertical)
+unsigned short *getCenterPos(Box *boxRelative, unsigned short childrenLenght, bool horizontal, bool vertical)
 {
     unsigned short *positions = (unsigned short *)malloc(sizeof(unsigned short) * 2);
 
-    positions[0] = horizontal ? (boxRelative->startPointX + (boxRelative->width - textLength) / 2) : 0;
+    positions[0] = horizontal ? (boxRelative->startPointX + (boxRelative->width - childrenLenght) / 2) : 0;
     positions[1] = vertical ? (boxRelative->startPointY + (boxRelative->height - 1) / 2) : 0;
 
     return positions;

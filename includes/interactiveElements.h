@@ -186,7 +186,7 @@ void renderInput(Input *input)
             if (cursorVisible)
                 input->text[input->cursor] = '|';
             else
-                input->text[input->cursor] = ' ';
+                input->text[input->cursor] = '|';
 
             cursorVisible = !cursorVisible;
         }
@@ -236,7 +236,7 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
         char errorMessage[40] = "Tipo de input";
         strcat(errorMessage, type);
         strcat(errorMessage, "indefinido");
-        error(errorMessage);
+        error("Tipo de input indefinido");
     }
 
     renderInput(newInput);
@@ -265,21 +265,18 @@ void moveCursor(unsigned short to)
  *
  * @return void
  */
-void removeCursor()
+void removeCursor(Input *input)
 {
-    char *newText = malloc(sizeof(char) * (inputFocused->textSize + 1));
-    for (int i = 0; i <= inputFocused->textSize; ++i)
-        if (i != inputFocused->cursor)
-            newText[i] = inputFocused->text[i];
-        else
-            newText[i] = inputFocused->text[1 + i];
+    if (input != NULL && input->text != NULL && input->cursor >= 0)
+    {
+        if (input->textSize > 0)
+        {
+            while(input->cursor != input->textSize + 1)
+                moveCursor(input->cursor + 1);
 
-    inputFocused->cursor = inputFocused->textSize;
-
-    newText[inputFocused->cursor] = '\0';
-
-    free(inputFocused->text);
-    inputFocused->text = newText;
+            input->text[input->cursor] = '\0';
+        }
+    }
 }
 
 /**
@@ -293,14 +290,12 @@ void setFocusInput(Input *input)
     for (int i = 0; i < numScreenInputs; ++i)
         screenInputs[i].focused = FALSE;
 
-    if (inputFocused)
-        removeCursor();
 
     input->focused = TRUE;
     inputFocused = input;
     cursorVisible = TRUE;
 
-    input->cursor = input->textSize;
+    input->cursor = input->textSize + 1;
 }
 
 /**
@@ -313,14 +308,12 @@ void setFocusInput(Input *input)
  */
 void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short mouseY)
 {
+    removeCursor(input);
     if (mouseX >= input->startPointX && mouseX < (input->startPointX + input->width) &&
         mouseY >= input->startPointY && mouseY < (input->startPointY + input->height))
         setFocusInput(input);
     else
-    {
-        inputFocused = NULL;
         input->focused = FALSE;
-    }
 }
 
 /**
@@ -402,7 +395,14 @@ void freeScreenInputs()
 void handleEvents()
 {
 #ifdef _WIN32
+    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD fdwMode = ENABLE_EXTENDED_FLAGS | ENABLE_MOUSE_INPUT;
+    SetConsoleMode(hInput, fdwMode);
+
+    INPUT_RECORD irInBuf[128];
+    DWORD cNumRead;
     ReadConsoleInput(hInput, irInBuf, 128, &cNumRead);
+
     for (DWORD i = 0; i < cNumRead; i++)
     {
         if (irInBuf[i].EventType == MOUSE_EVENT)
@@ -421,11 +421,9 @@ void handleEvents()
     }
     unsigned short key = getch();
 
-    bool hasInputFocused = !(inputFocused == NULL);
-
-    if (kbhit() && key == 27 && !hasInputFocused)
+    if (kbhit() && key == 27 && !inputFocused)
         setIsOpen(FALSE);
-    else if (hasInputFocused)
+    else if (inputFocused)
         handleInputText(key);
 
 #elif defined(__linux__)
@@ -446,11 +444,9 @@ void handleEvents()
             }
     }
 
-    bool hasInputFocused = !(inputFocused == NULL);
-
-    if (ch == 'q' && !hasInputFocused)
+    if (ch == 'q' && !inputFocused)
         setIsOpen(FALSE);
-    else if (hasInputFocused)
+    else if (inputFocused)
         handleInputText(ch);
 
     refresh();

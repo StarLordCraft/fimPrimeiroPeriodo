@@ -43,7 +43,6 @@ void clearScreen() {
         system("clear");
         printf("\033[2J\033[1;1H");
     #endif
-
 }
 
 /**
