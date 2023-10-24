@@ -1,19 +1,4 @@
-#ifndef LIB_H
-#define LIB_H
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "keys.h"
-
-#ifdef _WIN32
-    #include <windows.h>
-#else
-    #include <sys/ioctl.h>
-    #include <unistd.h>
-    #include <ncurses.h>
-    #include <unistd.h>
-#endif
+#include "standart.h"
 
 /**
  * @brief coloca na tela uma mensagem de erro e fecha o programa
@@ -59,4 +44,3 @@ void wait(unsigned int milliseconds)
         usleep(milliseconds * 1000);
     #endif
 }
-#endif

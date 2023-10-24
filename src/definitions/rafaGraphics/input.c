@@ -1,153 +1,15 @@
-#ifndef INTERACTIVE_ELEMENTS_H
-#define INTERACTIVE_ELEMENTS_H
+#include "standart.h"
 
-#include "elements.h"
+#include "rafaGraphics/input.h"
 
-/**
- * @brief
- * Essa struct serve pra criar armazenar e manipular estruturas analogas a button no html
- */
-typedef struct
-{
-    unsigned short width;
-    unsigned short height;
-    unsigned short startPointX;
-    unsigned short startPointY;
 
-    const char *text;
-
-    void (*onClick)();
-} Button;
-
-typedef struct
-{
-    unsigned short width;
-    unsigned short height;
-    unsigned short startPointX;
-    unsigned short startPointY;
-    unsigned short cursor;
-
-    char *text;
-    unsigned short textSize;
-    const char *label;
-    const char *value;
-    const char *type;
-
-    bool focused;
-} Input;
-
-/// @section Global Variables
-Button *screenButtons = NULL;
-unsigned short numScreenButtons = 0;
-
+///@section GLOBAL VARIABLES
 Input *screenInputs = NULL;
 unsigned short numScreenInputs = 0;
 Input *inputFocused = NULL;
 
 bool cursorVisible = TRUE;
-/// @endparblock end Global Variables
-
-/**
- * @brief Adiciona um botão ao array de botões para processar eventos de clique.
- *
- * @param button O botão a ser adicionado ao array.
- * @return void
- */
-void addButtonToScreen(Button *button)
-{
-    ++numScreenButtons;
-    screenButtons = (Button *)realloc(screenButtons, numScreenButtons * sizeof(Button));
-
-    if (screenButtons == NULL)
-        error("Falha na alocação de memória.\n");
-
-    screenButtons[numScreenButtons - 1] = *button;
-}
-
-/**
- * @brief Renderiza um botão na tela.
- *
- * @param button O botão a ser renderizado na tela.
- * @return void
- */
-void renderButton(Button *button)
-{
-    Box *box = createBox(button->width, button->height, button->startPointX, button->startPointY);
-    createBorder(box, 1, "-");
-
-    unsigned short *centerPos = getCenterPos(box, strlen(button->text), TRUE, TRUE);
-
-    renderText(centerPos[0], centerPos[1], button->text);
-
-    free(centerPos);
-    free(box);
-}
-
-/**
- * @brief Cria um Button
- *
- * @param width largura do button
- * @param height altura do button
- * @param startPointX Posicionamento no eixo X do button
- * @param startPointY Posicionamento no eixo Y do button
- * @param label Texto de call to action do button
- * @param callBack o que acontece quando esse botão é clicado
- * @return Button retorna um elemento de interação renderizável na tela
- */
-Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX,
-                     unsigned short startPointY, const char *label, void (*callBack)(void))
-{
-    if (screenButtons)
-        for (int i = 0; i < numScreenButtons; ++i)
-            if (screenButtons[i].startPointX == startPointX && screenButtons[i].startPointY == startPointY)
-            {
-                renderButton(&screenButtons[i]);
-                return &screenButtons[i];
-            }
-
-    Button *newButton = (Button *)malloc(sizeof(Button));
-
-    newButton->width = width;
-    newButton->height = height;
-    newButton->startPointX = startPointX;
-    newButton->startPointY = startPointY;
-    newButton->text = label;
-
-    newButton->onClick = callBack;
-
-    renderButton(newButton);
-    addButtonToScreen(newButton);
-
-    return newButton;
-}
-
-/**
- * @brief Testa se um botão foi clicado
- *
- * @param button botão a ser testado
- * @param mouseX posição X do mouse
- * @param mouseY posição Y do mouse
- * @return void
- */
-void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mouseY)
-{
-    if (mouseX >= button->startPointX && mouseX < (button->startPointX + button->width) &&
-        mouseY >= button->startPointY && mouseY < (button->startPointY + button->height))
-        if (button->onClick)
-            button->onClick();
-}
-
-/**
- * @brief Reseta o array de botões para receber os botões de uma outra tela.
- *
- * @return void
- */
-void freeScreenButtons()
-{
-    free(screenButtons);
-    screenButtons = NULL;
-    numScreenButtons = 0;
-}
+///@endparblock
 
 /**
  * @brief Adiciona um input ao array de inputs para processar eventos de clique.
@@ -334,7 +196,8 @@ void handleInputText(unsigned short key)
         for (unsigned short i = 0; i < numScreenInputs; ++i)
             if (&screenInputs[i] == inputFocused)
             {
-                if (i < numScreenInputs - 1){
+                if (i < numScreenInputs - 1)
+                {
                     removeCursor(inputFocused);
                     handleInputClickEvent(&screenInputs[1 + i], screenInputs[1 + i].startPointX + 1, screenInputs[1 + i].startPointY + 1);
                 }
@@ -407,70 +270,3 @@ void freeScreenInputs()
     screenInputs = NULL;
     numScreenInputs = 0;
 }
-
-/**
- * @brief recebe eventos e computa eles seja clique input de teclado...
- *
- * @return bool - se deve ou não parar o programa
- */
-void handleEvents()
-{
-#ifdef _WIN32
-    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD fdwMode = ENABLE_EXTENDED_FLAGS | ENABLE_MOUSE_INPUT;
-    SetConsoleMode(hInput, fdwMode);
-
-    INPUT_RECORD irInBuf[128];
-    DWORD cNumRead;
-    ReadConsoleInput(hInput, irInBuf, 128, &cNumRead);
-
-    for (DWORD i = 0; i < cNumRead; i++)
-    {
-        if (irInBuf[i].EventType == MOUSE_EVENT)
-        {
-            MOUSE_EVENT_RECORD mer = irInBuf[i].Event.MouseEvent;
-            if (mer.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED)
-            {
-                COORD pos = mer.dwMousePosition;
-                for (int i = 0; i < numScreenButtons; ++i)
-                    handleButtonEvent(&screenButtons[i], pos.X, pos.Y);
-
-                for (int i = 0; i < numScreenInputs; ++i)
-                    handleInputClickEvent(&screenInputs[i], pos.X, pos.Y);
-            }
-        }
-    }
-    unsigned short key = getch();
-
-    if (kbhit() && key == 27 && !inputFocused)
-        setIsOpen(FALSE);
-    else if (inputFocused)
-        handleInputText(key);
-
-#elif defined(__linux__)
-    int ch = getch();
-    if (ch == KEY_MOUSE)
-    {
-        MEVENT event;
-        if (getmouse(&event) == OK)
-            if (event.bstate & BUTTON1_PRESSED)
-            {
-                for (int i = 0; i < numScreenButtons; ++i)
-                    handleButtonEvent(&screenButtons[i], event.x, event.y);
-
-                inputFocused = FALSE;
-
-                for (int i = 0; i < numScreenInputs; ++i)
-                    handleInputClickEvent(&screenInputs[i], event.x, event.y);
-            }
-    }
-
-    if (ch == 'q' && !inputFocused)
-        setIsOpen(FALSE);
-    else if (inputFocused)
-        handleInputText(ch);
-
-    refresh();
-#endif
-}
-#endif

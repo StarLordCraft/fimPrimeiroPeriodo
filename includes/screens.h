@@ -1,7 +1,10 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
-#include "interactiveElements.h"
+#include "rafaGraphics/window.h"
+#include "rafaGraphics/box.h"
+#include "rafaGraphics/button.h"
+#include "rafaGraphics/input.h"
 
 typedef void (*RenderScreen)();
 
