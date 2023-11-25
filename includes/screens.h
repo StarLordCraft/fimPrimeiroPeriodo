@@ -1,7 +1,10 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
-#include "interactiveElements.h"
+#include "rafaGraphics/window.h"
+#include "rafaGraphics/box.h"
+#include "rafaGraphics/button.h"
+#include "rafaGraphics/input.h"
 
 typedef void (*RenderScreen)();
 
@@ -89,7 +92,8 @@ void renderMenu()
 void renderLogin()
 {
     Box *window = initScreen(1);
-    Input *Email = createInput(64, 10, 10, "Email:", "email", "password");
+    Input *Email = createInput(64, 10, 10, "Email:", "email", "email");
+    Input *Senha = createInput(64, 10, 15, "Senha:", "password", "password");
 
     free(window);
 }
