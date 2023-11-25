@@ -8,4 +8,4 @@ WORKDIR /app
 
 RUN mkdir build && cd build && cmake .. && make
 
-CMD [ "./build/Heveraldo_Project"]
+CMD [ "./build/Payment_System"]
