@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/HD1/Projetos/cpp/begginer/courseWork
+CMAKE_SOURCE_DIR = /home/rafael/HD1/Projetos/cpp/begginer/courseWork
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/HD1/Projetos/cpp/begginer/courseWork/build
+CMAKE_BINARY_DIR = /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build
 
 # Utility rule file for run.
 
@@ -82,6 +82,6 @@ CMakeFiles/run.dir/clean:
 .PHONY : CMakeFiles/run.dir/clean
 
 CMakeFiles/run.dir/depend:
-	cd /mnt/HD1/Projetos/cpp/begginer/courseWork/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/HD1/Projetos/cpp/begginer/courseWork /mnt/HD1/Projetos/cpp/begginer/courseWork /mnt/HD1/Projetos/cpp/begginer/courseWork/build /mnt/HD1/Projetos/cpp/begginer/courseWork/build /mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/run.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/rafael/HD1/Projetos/cpp/begginer/courseWork /home/rafael/HD1/Projetos/cpp/begginer/courseWork /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/run.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/run.dir/depend
 

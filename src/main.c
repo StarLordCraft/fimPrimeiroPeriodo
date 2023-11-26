@@ -1,6 +1,4 @@
-#include "rafaGraphics/screens.h"
-#include "rafaGraphics/button.h"
-#include "rafaGraphics/input.h"
+#include "client/loadScreens.h"
 
 int main(int argc, char **argv) {
     setIsOpen(TRUE);
@@ -9,15 +7,17 @@ int main(int argc, char **argv) {
         configureConsole();
     #endif
 
-    RenderScreen *screens = getScreens(); 
+    AppStateManager *appStateManager = getScreens();
+
+    loadScreens();
 
     while(isOpen()){
-        screens[appStateManager->last]();
+        appStateManager->screens[appStateManager->last]();
 
         handleEvents();
     }
 
-    freeScreens(screens);
+    freeScreens(appStateManager->screens);
     freeScreenButtons(); freeScreenInputs();
 
     #ifdef __linux__

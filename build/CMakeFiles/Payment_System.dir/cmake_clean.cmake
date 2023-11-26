@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Payment_System.dir/src/definitions/client/loadScreens.c.o"
+  "CMakeFiles/Payment_System.dir/src/definitions/client/loadScreens.c.o.d"
   "CMakeFiles/Payment_System.dir/src/definitions/rafaGraphics/box.c.o"
   "CMakeFiles/Payment_System.dir/src/definitions/rafaGraphics/box.c.o.d"
   "CMakeFiles/Payment_System.dir/src/definitions/rafaGraphics/button.c.o"

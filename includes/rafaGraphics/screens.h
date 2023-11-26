@@ -6,14 +6,13 @@
 
 typedef void (*RenderScreen)();
 
-typedef struct {
-    unsigned short last;
+typedef struct AppStateManager {
     RenderScreen *screens;
-}AppStateManager;
+    int numScreens;
+    int last;
+} AppStateManager;
 
 extern AppStateManager *appStateManager;
-
-extern RenderScreen *screens;
 
 /***
  * @brief Uma box que representa a janela inteira
@@ -22,6 +21,8 @@ extern RenderScreen *screens;
  * @return Box retorna uma Box que representa a janela do app
 */
 Box *initScreen(unsigned short borderSize);
+
+void addScreen(RenderScreen screen);
 
 /**
  * @brief limpar coisas da tela anterior
@@ -33,7 +34,7 @@ void resetScreen();
  * 
  * @return void * retorna um array de funções que desenham as telas 
 */
-void *getScreens();
+AppStateManager *getScreens();
 
 /**
  * @brief decorator pra funções de trocar a tela

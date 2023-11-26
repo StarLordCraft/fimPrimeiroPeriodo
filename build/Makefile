@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/HD1/Projetos/cpp/begginer/courseWork
+CMAKE_SOURCE_DIR = /home/rafael/HD1/Projetos/cpp/begginer/courseWork
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/HD1/Projetos/cpp/begginer/courseWork/build
+CMAKE_BINARY_DIR = /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles /mnt/HD1/Projetos/cpp/begginer/courseWork/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rafael/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -141,6 +141,30 @@ run: cmake_check_build_system
 run/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/build
 .PHONY : run/fast
+
+src/definitions/client/loadScreens.o: src/definitions/client/loadScreens.c.o
+.PHONY : src/definitions/client/loadScreens.o
+
+# target to build an object file
+src/definitions/client/loadScreens.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Payment_System.dir/build.make CMakeFiles/Payment_System.dir/src/definitions/client/loadScreens.c.o
+.PHONY : src/definitions/client/loadScreens.c.o
+
+src/definitions/client/loadScreens.i: src/definitions/client/loadScreens.c.i
+.PHONY : src/definitions/client/loadScreens.i
+
+# target to preprocess a source file
+src/definitions/client/loadScreens.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Payment_System.dir/build.make CMakeFiles/Payment_System.dir/src/definitions/client/loadScreens.c.i
+.PHONY : src/definitions/client/loadScreens.c.i
+
+src/definitions/client/loadScreens.s: src/definitions/client/loadScreens.c.s
+.PHONY : src/definitions/client/loadScreens.s
+
+# target to generate assembly for a file
+src/definitions/client/loadScreens.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Payment_System.dir/build.make CMakeFiles/Payment_System.dir/src/definitions/client/loadScreens.c.s
+.PHONY : src/definitions/client/loadScreens.c.s
 
 src/definitions/rafaGraphics/box.o: src/definitions/rafaGraphics/box.c.o
 .PHONY : src/definitions/rafaGraphics/box.o
@@ -320,6 +344,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... run"
 	@echo "... Payment_System"
+	@echo "... src/definitions/client/loadScreens.o"
+	@echo "... src/definitions/client/loadScreens.i"
+	@echo "... src/definitions/client/loadScreens.s"
 	@echo "... src/definitions/rafaGraphics/box.o"
 	@echo "... src/definitions/rafaGraphics/box.i"
 	@echo "... src/definitions/rafaGraphics/box.s"

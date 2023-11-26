@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/HD1/Projetos/cpp/begginer/courseWork
+# Install script for directory: /home/rafael/HD1/Projetos/cpp/begginer/courseWork
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/mnt/HD1/Projetos/cpp/begginer/courseWork/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/rafael/HD1/Projetos/cpp/begginer/courseWork/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
