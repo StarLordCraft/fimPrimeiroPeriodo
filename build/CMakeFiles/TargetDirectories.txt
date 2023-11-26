@@ -1,0 +1,4 @@
+/mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/Payment_System.dir
+/mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/run.dir
+/mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/edit_cache.dir
+/mnt/HD1/Projetos/cpp/begginer/courseWork/build/CMakeFiles/rebuild_cache.dir

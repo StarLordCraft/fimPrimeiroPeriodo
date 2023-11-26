@@ -2,7 +2,7 @@
 #define SCREENS_H
 
 #include "rafaGraphics/box.h"
-#include <stdlib.h>
+#include "standart.h"
 
 typedef void (*RenderScreen)();
 
@@ -11,9 +11,9 @@ typedef struct {
     RenderScreen *screens;
 }AppStateManager;
 
-AppStateManager *appStateManager;
+extern AppStateManager *appStateManager;
 
-RenderScreen *screens;
+extern RenderScreen *screens;
 
 /***
  * @brief Uma box que representa a janela inteira

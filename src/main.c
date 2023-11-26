@@ -1,5 +1,6 @@
 #include "rafaGraphics/screens.h"
-#include "standart.h"
+#include "rafaGraphics/button.h"
+#include "rafaGraphics/input.h"
 
 int main(int argc, char **argv) {
     setIsOpen(TRUE);

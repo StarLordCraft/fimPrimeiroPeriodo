@@ -1,5 +1,10 @@
-#include "rafaGraphics/box.h"
 #include "rafaGraphics/screens.h"
+#include "rafaGraphics/box.h"
+#include "rafaGraphics/button.h"
+#include "rafaGraphics/input.h"
+
+AppStateManager *appStateManager = NULL;
+RenderScreen *screens = NULL;
 
 Box *initScreen(unsigned short borderSize)
 {
@@ -20,6 +25,7 @@ void resetScreen()
 
 void *getScreens()
 {
+    screens = (RenderScreen *) malloc(sizeof(AppStateManager));
     appStateManager = (AppStateManager *) malloc(sizeof(AppStateManager));
     appStateManager->last = 0;
     return screens;
@@ -28,7 +34,7 @@ void *getScreens()
 void changeScreen(RenderScreen renderScreen)
 {
     ++appStateManager->last;
-    realloc(appStateManager->screens, appStateManager->last + 1);
+    appStateManager = realloc(appStateManager->screens, appStateManager->last + 1);
 
     freeScreenButtons();
     freeScreenInputs();
