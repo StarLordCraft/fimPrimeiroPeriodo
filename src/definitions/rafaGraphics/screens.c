@@ -32,22 +32,48 @@ AppStateManager *getScreens() {
     if (!appStateManager) {
         appStateManager = (AppStateManager *)malloc(sizeof(AppStateManager));
         appStateManager->screens = NULL;
+        appStateManager->recentScreens = NULL;
         appStateManager->numScreens = 0;
-        appStateManager->last = 0;
+        appStateManager->current = 0;
+        appStateManager->recentTop = -1;
     }
     return appStateManager;
 }
 
-void changeScreen(RenderScreen renderScreen)
-{
-    ++appStateManager->last;
-
-    freeScreenButtons();
-    freeScreenInputs();
-    clearScreen();
-    
-    renderScreen();
+void pushRecentScreen(RenderScreen screen) {
+    appStateManager->recentScreens = realloc(appStateManager->recentScreens, (appStateManager->recentTop + 1) * sizeof(RenderScreen));
+    appStateManager->recentScreens[appStateManager->recentTop] = screen;
+    ++appStateManager->recentTop;
 }
 
-void freeScreens(RenderScreen *screens)
-{ free(screens); }
+void changeScreen(RenderScreen renderScreen) {
+    pushRecentScreen(appStateManager->screens[appStateManager->current]);
+
+    for(int i = 0; i < appStateManager->numScreens; ++i)
+        if(appStateManager->screens[i] == renderScreen){
+            appStateManager->current = i;
+            break;
+        };
+
+    resetScreen();
+}
+
+void backScreen() {
+    if (appStateManager->recentTop < 0) return;
+
+    RenderScreen previousScreen = appStateManager->recentScreens[--appStateManager->recentTop];
+
+    for(int i = 0; i < appStateManager->numScreens; ++i)
+        if(appStateManager->screens[i] == previousScreen){
+            appStateManager->current = i;
+            break;
+        };
+
+    resetScreen();
+}
+
+void freeScreens() 
+{
+    free(appStateManager->screens);
+    free(appStateManager->recentScreens);
+}

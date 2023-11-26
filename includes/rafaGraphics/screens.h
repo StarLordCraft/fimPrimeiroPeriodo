@@ -8,8 +8,10 @@ typedef void (*RenderScreen)();
 
 typedef struct AppStateManager {
     RenderScreen *screens;
-    int numScreens;
-    int last;
+    RenderScreen *recentScreens;
+    unsigned short numScreens;
+    unsigned short current;
+    int recentTop;
 } AppStateManager;
 
 extern AppStateManager *appStateManager;
@@ -42,11 +44,22 @@ AppStateManager *getScreens();
 void changeScreen(RenderScreen renderScreen);
 
 /**
+ * @brief adiciona uma tela pra pilha de telas de navegação
+ * @param screen tela a ser adicionada
+*/
+void pushRecentScreen(RenderScreen screen);
+
+/**
+ * @brief navega pra trás nas telas
+*/
+void backScreen();
+
+/**
  * @brief libera memoria alocada de um objeto RenderScreen
  * 
  * @param screens array de RenderScreen a ter memória liberada
  * @return void
 */
-void freeScreens(RenderScreen *screens);
+void freeScreens();
 
 #endif

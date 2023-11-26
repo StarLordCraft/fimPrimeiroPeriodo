@@ -12,12 +12,12 @@ int main(int argc, char **argv) {
     loadScreens();
 
     while(isOpen()){
-        appStateManager->screens[appStateManager->last]();
+        appStateManager->screens[appStateManager->current]();
 
         handleEvents();
     }
 
-    freeScreens(appStateManager->screens);
+    freeScreens();
     freeScreenButtons(); freeScreenInputs();
 
     #ifdef __linux__

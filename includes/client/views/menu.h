@@ -1,9 +1,13 @@
 #ifndef VIEW_MENU_H
 #define VIEW_MENU_H
 
+#include "rafaGraphics/box.h"
+#include "rafaGraphics/button.h"
+#include "client/views/auth.h"
+
 void changeScreenLogin()
 {
-    
+    changeScreen(renderLogin);
 }
 
 
