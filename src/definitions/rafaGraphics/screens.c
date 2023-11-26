@@ -21,6 +21,7 @@ void resetScreen()
 void *getScreens()
 {
     appStateManager = (AppStateManager *) malloc(sizeof(AppStateManager));
+    appStateManager->last = 0;
     return screens;
 }
 
