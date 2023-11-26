@@ -1,4 +1,5 @@
-#include "screens.h"
+#include "rafaGraphics/screens.h"
+#include "standart.h"
 
 int main(int argc, char **argv) {
     setIsOpen(TRUE);
@@ -9,7 +10,7 @@ int main(int argc, char **argv) {
     RenderScreen *screens = getScreens(); 
 
     while(isOpen()){
-        screens[appState]();
+        screens[appStateManager->last]();
 
         handleEvents();
     }
