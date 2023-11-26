@@ -1,6 +1,9 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
+#include "rafaGraphics/box.h"
+#include <stdlib.h>
+
 typedef void (*RenderScreen)();
 
 typedef struct {
@@ -8,7 +11,7 @@ typedef struct {
     RenderScreen *screens;
 }AppStateManager;
 
-AppStateManager *appStateManager = (AppStateManager *) malloc(sizeof(AppStateManager));
+AppStateManager *appStateManager;
 
 RenderScreen *screens;
 

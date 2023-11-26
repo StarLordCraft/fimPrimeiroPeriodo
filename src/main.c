@@ -3,6 +3,7 @@
 
 int main(int argc, char **argv) {
     setIsOpen(TRUE);
+
     #ifdef __linux__
         configureConsole();
     #endif

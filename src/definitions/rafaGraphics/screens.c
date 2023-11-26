@@ -20,6 +20,7 @@ void resetScreen()
 
 void *getScreens()
 {
+    appStateManager = (AppStateManager *) malloc(sizeof(AppStateManager));
     return screens;
 }
 
