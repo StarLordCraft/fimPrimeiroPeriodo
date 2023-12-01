@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(Heveraldo_Project)
+project(Payment_System)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_DEBUG_POSTFIX "d")
