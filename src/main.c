@@ -10,8 +10,6 @@ int main(int argc, char **argv) {
 
     createBinaryFile("teste");
 
-    createBinaryFile("teste");
-
     AppStateManager *appStateManager = getScreens();
 
     loadScreens();
