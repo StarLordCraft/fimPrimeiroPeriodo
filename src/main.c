@@ -1,23 +1,28 @@
-#include "screens.h"
+#include "client/loadScreens.h"
 #include "sarahQL/createTable.h"
 
 int main(int argc, char **argv) {
     setIsOpen(TRUE);
+
     #ifdef __linux__
         configureConsole();
     #endif
 
     createBinaryFile("teste");
 
-    RenderScreen *screens = getScreens(); 
+    createBinaryFile("teste");
+
+    AppStateManager *appStateManager = getScreens();
+
+    loadScreens();
 
     while(isOpen()){
-        screens[appState]();
+        appStateManager->screens[appStateManager->last]();
 
         handleEvents();
     }
 
-    freeScreens(screens);
+    freeScreens(appStateManager->screens);
     freeScreenButtons(); freeScreenInputs();
 
     #ifdef __linux__
