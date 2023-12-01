@@ -12,7 +12,8 @@ void renderLogin()
     Input *Email = createInput(64, 10, 10, "Email:", "email", "email");
     Input *Senha = createInput(64, 10, 15, "Senha:", "password", "password");
 
-    free(window);
+    renderInput(Email); renderInput(Senha);
+    gambiarra();
 }
 
 #endif

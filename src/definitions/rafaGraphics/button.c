@@ -104,7 +104,9 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
  */
 void freeScreenButtons()
 {
-    free(screenButtons);
-    screenButtons = NULL;
-    numScreenButtons = 0;
+    if(screenButtons){
+        free(screenButtons);
+        screenButtons = NULL;
+        numScreenButtons = 0;
+    }
 }

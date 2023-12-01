@@ -6,4 +6,6 @@ void loadScreens()
 {
     addScreen(renderMenu);
     addScreen(renderLogin);
+
+    pushRecentScreen(appStateManager->screens[appStateManager->current]);
 }

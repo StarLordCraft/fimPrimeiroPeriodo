@@ -94,19 +94,6 @@ Input *createInput(unsigned short width, unsigned short startPointX, unsigned sh
     newInput->focused = FALSE;
     newInput->value = value;
 
-    if (strcmp(type, "password") == 0 || strcmp(type, "email") == 0 || strcmp(type, "text") == 0 || strcmp(type, "number") == 0)
-        newInput->type = type;
-    else
-    {
-        char *errorMessage = (char *)malloc(sizeof(char) * 40);
-
-        errorMessage = strcat(errorMessage, "Tipo de input: ");
-        errorMessage = strcat(errorMessage, type);
-        errorMessage = strcat(errorMessage, "indefinido");
-
-        error(errorMessage);
-    }
-
     renderInput(newInput);
     addInputToScreen(newInput);
 
@@ -265,8 +252,13 @@ void handleInputText(unsigned short key)
  */
 void freeScreenInputs()
 {
-    free(screenInputs);
-    free(inputFocused);
+    if(screenInputs){
+        free(screenInputs);
+
+        if(inputFocused)
+            free(inputFocused);
+    
     screenInputs = NULL;
     numScreenInputs = 0;
+    }
 }

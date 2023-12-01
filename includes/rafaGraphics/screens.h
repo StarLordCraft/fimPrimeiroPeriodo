@@ -12,6 +12,7 @@ typedef struct AppStateManager {
     unsigned short numScreens;
     unsigned short current;
     int recentTop;
+    bool reRender;
 } AppStateManager;
 
 extern AppStateManager *appStateManager;
@@ -27,16 +28,11 @@ Box *initScreen(unsigned short borderSize);
 void addScreen(RenderScreen screen);
 
 /**
- * @brief limpar coisas da tela anterior
-*/
-void resetScreen();
-
-/**
  * @brief define as telas a serem utilizadas no programa e retorna elas em um array
  * 
- * @return void * retorna um array de funções que desenham as telas 
+ * @return void 
 */
-AppStateManager *getScreens();
+void initAppStateManager();
 
 /**
  * @brief decorator pra funções de trocar a tela
@@ -61,5 +57,15 @@ void backScreen();
  * @return void
 */
 void freeScreens();
+
+/**
+ * @brief função pra rodar a aplicação
+*/
+void runApp();
+
+/**
+ * @brief tava bom demais pra ser vdd...
+*/
+void gambiarra();
 
 #endif

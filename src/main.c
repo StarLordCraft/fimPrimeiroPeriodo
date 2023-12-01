@@ -7,15 +7,11 @@ int main(int argc, char **argv) {
         configureConsole();
     #endif
 
-    AppStateManager *appStateManager = getScreens();
-
+    initAppStateManager();
     loadScreens();
 
-    while(isOpen()){
-        appStateManager->screens[appStateManager->current]();
-
-        handleEvents();
-    }
+    while(isOpen())
+        runApp();
 
     freeScreens();
     freeScreenButtons(); freeScreenInputs();
