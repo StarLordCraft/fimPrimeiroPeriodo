@@ -2,11 +2,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+char * baseDbPath = "";
+
+void setBaseDbPath(char *dbPath)
+{
+    baseDbPath = dbPath;
+}
+
+
 void createBinaryFile(const char *filename) {
-    const char *relativePath = "/mnt/HD1/Projetos/cpp/begginer/courseWork/includes/server/database";
     char fullPath[256];
 
-    snprintf(fullPath, sizeof(fullPath), "%s/%s.db", relativePath, filename);
+    snprintf(fullPath, sizeof(fullPath), "%s/%s.ssql", baseDbPath, filename);
 
     FILE *file = fopen(fullPath, "wb");
 

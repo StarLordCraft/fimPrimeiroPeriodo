@@ -1,5 +1,6 @@
 #include "client/loadScreens.h"
 #include "sarahQL/createTable.h"
+#include <string.h>
 
 int main(int argc, char **argv) {
     setIsOpen(TRUE);
@@ -7,8 +8,8 @@ int main(int argc, char **argv) {
     #ifdef __linux__
         configureConsole();
     #endif
-
-    createBinaryFile("teste");
+    
+    setBaseDbPath("../includes/server/database");
 
     AppStateManager *appStateManager = getScreens();
 
