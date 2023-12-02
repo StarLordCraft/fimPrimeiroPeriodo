@@ -5,6 +5,8 @@ project(Payment_System)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_DEBUG_POSTFIX "d")
 
+include_directories(${CMAKE_BINARY_DIR})
+
 add_library(tutorial_compiler_flags INTERFACE)
 
 include_directories(./includes)
@@ -17,9 +19,9 @@ file(GLOB DEFINITIONS_SOURCES
 add_executable(${PROJECT_NAME} ./src/main.c ${DEFINITIONS_SOURCES})
 
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -g) # Adicione a flag -g para informações de depuração.
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -g)
 elseif (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /Zi) # Adicione a flag /Zi para informações de depuração.
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /Zi)
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})

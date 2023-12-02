@@ -28,6 +28,9 @@ void finishApp()
 int main(int argc, char **argv) {
     configureApp();
 
+    useServerDb();
+    createBinaryFile("teste");
+
     while(isOpen())
         runApp();
     
