@@ -4,6 +4,9 @@
 .vscode
 .env
 
+*.bin
+**/*.bin
+
 debug
 build
 
