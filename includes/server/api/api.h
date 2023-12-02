@@ -32,7 +32,7 @@ Api *api;
 void initApi()
 {
     api = (Api *) malloc(sizeof(Api));
-    api->Controllers = (Controller **) malloc(sizeof(Controller));
+    api->controllers = (Controller **) malloc(sizeof(Controller));
     api->size = 0;
 }
 
@@ -55,7 +55,7 @@ void useServerDb()
  */
 void addController(Controller *controller)
 {
-    Controller **newControllers = realloc(api->Controllers, sizeof(Controller *) * (api->size + 1));
+    Controller **newControllers = realloc(api->controllers, sizeof(Controller *) * (api->size + 1));
     if (newControllers == NULL) {
         // Tratamento de erro para falha de realocação
         return;
@@ -102,8 +102,8 @@ void createController(const char *route, Method GET, Method POST, Method PUT, Me
  */
 Controller *findControllerByRoute(const char *route) {
     for (int i = 0; i < api->size; i++) {
-        if (strcmp(api->Controllers[i]->route, route) == 0) {
-            return api->Controllers[i];
+        if (strcmp(api->controllers[i]->route, route) == 0) {
+            return api->controllers[i];
         }
     }
     return NULL;
@@ -117,10 +117,10 @@ Controller *findControllerByRoute(const char *route) {
 void freeApi() {
     if (api != NULL) {
         for (int i = 0; i < api->size; i++) {
-            free(api->Controllers[i]);
+            free(api->controllers[i]);
         }
 
-        free(api->Controllers);
+        free(api->controllers);
 
         free(api);
         api = NULL;
