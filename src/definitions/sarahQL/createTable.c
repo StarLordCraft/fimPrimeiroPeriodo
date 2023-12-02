@@ -13,7 +13,7 @@ void setBaseDbPath(char *dbPath)
 void createBinaryFile(const char *filename) {
     char fullPath[256];
 
-    snprintf(fullPath, sizeof(fullPath), "%s/%s.ssql", baseDbPath, filename);
+    snprintf(fullPath, sizeof(fullPath), "%s/%s.bin", baseDbPath, filename);
 
     FILE *file = fopen(fullPath, "wb");
 
