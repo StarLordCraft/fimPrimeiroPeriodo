@@ -7,19 +7,19 @@
 // Definição do tipo de ponteiro para função Method
 typedef void *(*Method)(void *);
 
-// Estrutura representando um Endpoint
+// Estrutura representando um Controller
 typedef struct {
-    const char *route;   ///< Rota do endpoint
+    const char *route;   ///< Rota do Controller
     Method GET;          ///< Ponteiro para função do método GET
     Method POST;         ///< Ponteiro para função do método POST
     Method PUT;          ///< Ponteiro para função do método PUT
     Method DELETE;       ///< Ponteiro para função do método DELETE
-} Endpoint;
+} Controller;
 
 // Estrutura representando uma API
 typedef struct {
-    Endpoint **endpoints; ///< Array de Endpoints
-    unsigned short size; ///< Tamanho do array de Endpoints
+    Controller **controllers; ///< Array de Controllers
+    unsigned short size; ///< Tamanho do array de Controllers
 } Api;
 
 Api *api;
@@ -27,12 +27,12 @@ Api *api;
 /**
  * @brief Inicializa a estrutura da API.
  *
- * Aloca memória para a API e a estrutura de endpoints, definindo o tamanho inicial como 0.
+ * Aloca memória para a API e a estrutura de Controllers, definindo o tamanho inicial como 0.
  */
 void initApi()
 {
     api = (Api *) malloc(sizeof(Api));
-    api->endpoints = (Endpoint **) malloc(sizeof(Endpoint));
+    api->Controllers = (Controller **) malloc(sizeof(Controller));
     api->size = 0;
 }
 
@@ -47,63 +47,63 @@ void useServerDb()
 }
 
 /**
- * @brief Adiciona um novo endpoint à API.
+ * @brief Adiciona um novo Controller à API.
  *
- * Realoca o array de endpoints da API para acomodar o novo endpoint e incrementa o tamanho.
+ * Realoca o array de Controllers da API para acomodar o novo Controller e incrementa o tamanho.
  * 
- * @param endpoint O endpoint a ser adicionado.
+ * @param Controller O Controller a ser adicionado.
  */
-void addEndpoint(Endpoint *endpoint)
+void addController(Controller *controller)
 {
-    Endpoint **newEndpoints = realloc(api->endpoints, sizeof(Endpoint *) * (api->size + 1));
-    if (newEndpoints == NULL) {
+    Controller **newControllers = realloc(api->Controllers, sizeof(Controller *) * (api->size + 1));
+    if (newControllers == NULL) {
         // Tratamento de erro para falha de realocação
         return;
     }
-    api->endpoints = newEndpoints;
-    api->endpoints[api->size] = endpoint;
+    api->controllers = newControllers;
+    api->controllers[api->size] = controller;
     ++api->size;
 }
 
 
 /**
- * @brief Cria e inicializa um novo endpoint com os métodos HTTP especificados.
+ * @brief Cria e inicializa um novo Controller com os métodos HTTP especificados.
  * 
- * Esta função aloca memória para um novo endpoint, configura a rota e associa 
- * os métodos HTTP fornecidos (GET, POST, PUT, DELETE) ao endpoint. A rota é duplicada
- * para evitar problemas de ponteiros. Esta função não adiciona o endpoint a qualquer
- * estrutura de gerenciamento de endpoints, isso deve ser feito separadamente.
+ * Esta função aloca memória para um novo Controller, configura a rota e associa 
+ * os métodos HTTP fornecidos (GET, POST, PUT, DELETE) ao Controller. A rota é duplicada
+ * para evitar problemas de ponteiros. Esta função não adiciona o Controller a qualquer
+ * estrutura de gerenciamento de Controllers, isso deve ser feito separadamente.
  *
- * @param route Ponteiro para a string que representa a rota do endpoint.
- * @param GET Função que representa o método GET para este endpoint.
- * @param POST Função que representa o método POST para este endpoint.
- * @param PUT Função que representa o método PUT para este endpoint.
- * @param DELETE Função que representa o método DELETE para este endpoint.
+ * @param route Ponteiro para a string que representa a rota do Controller.
+ * @param GET Função que representa o método GET para este Controller.
+ * @param POST Função que representa o método POST para este Controller.
+ * @param PUT Função que representa o método PUT para este Controller.
+ * @param DELETE Função que representa o método DELETE para este Controller.
  * @return void
  */
-void createEndPoint(const char *route, Method GET, Method POST, Method PUT, Method DELETE)
+void createController(const char *route, Method GET, Method POST, Method PUT, Method DELETE)
 {
-    Endpoint * newEndpoint = (Endpoint *) malloc(sizeof(Endpoint));
-    newEndpoint->route = route;
+    Controller *newController = (Controller *) malloc(sizeof(Controller));
+    newController->route = route;
 
-    newEndpoint->GET = GET;
-    newEndpoint->POST = POST;
-    newEndpoint->PUT = PUT;
-    newEndpoint->DELETE = DELETE;
+    newController->GET = GET;
+    newController->POST = POST;
+    newController->PUT = PUT;
+    newController->DELETE = DELETE;
 }
 
 /**
- * @brief Encontra um endpoint pelo caminho da rota.
+ * @brief Encontra um Controller pelo caminho da rota.
  *
- * Percorre o array de endpoints procurando por uma rota correspondente.
+ * Percorre o array de Controllers procurando por uma rota correspondente.
  * 
  * @param route O caminho da rota a ser procurada.
- * @return Ponteiro para o Endpoint encontrado ou NULL se não encontrado.
+ * @return Ponteiro para o Controller encontrado ou NULL se não encontrado.
  */
-Endpoint *findEndpointByRoute(const char *route) {
+Controller *findControllerByRoute(const char *route) {
     for (int i = 0; i < api->size; i++) {
-        if (strcmp(api->endpoints[i]->route, route) == 0) {
-            return api->endpoints[i];
+        if (strcmp(api->Controllers[i]->route, route) == 0) {
+            return api->Controllers[i];
         }
     }
     return NULL;
@@ -112,15 +112,15 @@ Endpoint *findEndpointByRoute(const char *route) {
 /**
  * @brief Libera a memória alocada para a API.
  *
- * Desaloca cada Endpoint alocado dinamicamente, o array de Endpoints e a estrutura Api.
+ * Desaloca cada Controller alocado dinamicamente, o array de Controllers e a estrutura Api.
  */
 void freeApi() {
     if (api != NULL) {
         for (int i = 0; i < api->size; i++) {
-            free(api->endpoints[i]);
+            free(api->Controllers[i]);
         }
 
-        free(api->endpoints);
+        free(api->Controllers);
 
         free(api);
         api = NULL;
