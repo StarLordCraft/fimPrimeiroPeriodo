@@ -3,9 +3,12 @@
 #include "rafaGraphics/window.h"
 #include "rafaGraphics/button.h"
 #include "rafaGraphics/input.h"
+#include "rafaGraphics/screens.h"
 
 /// @brief @section GLOBAL VARIABLES
 bool open = TRUE;
+int threadCreateStatus = 1;
+pthread_t renderThreadId;
 /// @endparblock
 
 /**
@@ -65,6 +68,7 @@ void configureConsole()
     initscr();
     cbreak();
     noecho();
+    raw();
     keypad(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
     timeout(0);
@@ -137,8 +141,7 @@ void handleEvents()
     {
         MEVENT event;
         if (getmouse(&event) == OK)
-            if (event.bstate & BUTTON1_PRESSED)
-            {
+            if (event.bstate & BUTTON1_PRESSED){
 
                 for (int i = 0; i < numScreenButtons; ++i)
                     handleButtonEvent(&screenButtons[i], event.x, event.y);
@@ -147,14 +150,35 @@ void handleEvents()
 
                 for (int i = 0; i < numScreenInputs; ++i)
                     handleInputClickEvent(&screenInputs[i], event.x, event.y);
-            }
+
+                appStateManager->reRender = true;
+            };
     }
 
-    if (ch == 'q' && !inputFocused)
-        setIsOpen(FALSE);
-    else if (inputFocused)
+    if (inputFocused){
         handleInputText(ch);
+        appStateManager->reRender = true;
+    }else {
+        if(ch == 27)
+            backScreen();
+
+        else if (ch == 'q' && !inputFocused)
+            setIsOpen(FALSE);
+    }
 
     refresh();
 #endif
+}
+
+void* renderThreadFunction(void* arg) {
+    while (isOpen()) {
+        if (appStateManager->reRender) {
+            clearScreen();
+            appStateManager->screens[appStateManager->current]();
+            appStateManager->reRender = false;
+        }
+        wait(1000 / 30);
+    }
+
+    return NULL;
 }

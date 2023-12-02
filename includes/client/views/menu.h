@@ -1,9 +1,13 @@
 #ifndef VIEW_MENU_H
 #define VIEW_MENU_H
 
+#include "rafaGraphics/box.h"
+#include "rafaGraphics/button.h"
+#include "client/views/auth.h"
+
 void changeScreenLogin()
 {
-    
+    changeScreen(renderLogin);
 }
 
 
@@ -15,7 +19,7 @@ void changeScreenRegister()
 void renderMenu()
 {    
     Box *window = initScreen(1);
-
+    
     unsigned short *windowCenter = getCenterPos(window, 10, TRUE, TRUE);
     
     Box *title = createBox(10, 5, windowCenter[0] + 3, 3);
@@ -25,8 +29,8 @@ void renderMenu()
 
     Button *Entrar = createButton(15, 5, windowCenter[0], windowCenter[1], " Entrar", changeScreenLogin);
     Button *Cadastrar = createButton(15, 5, windowCenter[0], (windowCenter[1] + Entrar->height + 2), "Cadastrar", changeScreenRegister);
-
-    free(window); free(title); free(titleTextPos); free(windowCenter);
+    
+    renderButton(Entrar); renderButton(Cadastrar);
 }
 
 #endif
