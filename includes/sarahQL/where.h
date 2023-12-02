@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdbool.h>
 #include "sarahQL/contentDescriptor.h"
 
 typedef struct {
@@ -13,19 +14,25 @@ typedef struct {
 } SearchResult;
 
 /**
- * @brief Realiza uma busca em um array de estruturas, procurando elementos que correspondam a um valor específico em um campo especificado.
+ * @brief Verifica se um determinado elemento corresponde a um valor específico em um campo especificado.
  *
- * @param array Ponteiro para o array de estruturas onde a busca será realizada.
- * @param numElements Número de elementos no array.
- * @param elementSize Tamanho de cada elemento no array (tamanho da estrutura).
- * @param desc Descritor da estrutura, detalhando os campos e seus tipos.
- * @param fieldName Nome do campo dentro da estrutura no qual a busca será realizada.
- * @param value Ponteiro para o valor que será comparado com o campo especificado.
+ * Esta função é utilizada para determinar se um único elemento em um array de estruturas atende a um critério específico.
+ * Ela examina um campo especificado dentro da estrutura e o compara a um valor fornecido. A função suporta múltiplos 
+ * tipos de dados para os campos, conforme definido no ContentDescriptor. É comumente usada em operações de busca onde 
+ * os elementos são avaliados individualmente.
  *
- * @return Ponteiro para o primeiro elemento encontrado que corresponde ao critério de busca. Retorna NULL se nenhum elemento correspondente for encontrado ou em caso de erro.
+ * @param element Ponteiro para o elemento que será verificado para a correspondência. Este deve ser um ponteiro para uma estrutura.
+ * @param desc Descritor da estrutura, detalhando os campos e seus tipos. Isso é usado para entender o layout 
+ *             e os tipos de dados dos campos dentro da estrutura.
+ * @param fieldName Nome do campo dentro da estrutura que será comparado com o valor fornecido. A função 
+ *                  verificará apenas este campo específico dentro da estrutura.
+ * @param value Ponteiro para o valor que será comparado com o campo especificado no elemento. O tipo deste 
+ *              valor deve corresponder ao tipo do campo, conforme descrito no ContentDescriptor.
+ *
+ * @return Verdadeiro se o campo especificado no elemento corresponder ao valor fornecido, Falso caso contrário. Também retorna Falso em 
+ *         caso de erro ou se o campo não for encontrado no descritor.
  */
-void **findMatches(void *array, size_t numElements, size_t elementSize, 
-           ContentDescriptor desc, const char *fieldName, void *value, size_t *matchedCount);
+bool isMatch(void *element, ContentDescriptor desc, const char *fieldName, void *value);
 
 
 /**
