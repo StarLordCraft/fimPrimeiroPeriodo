@@ -2,6 +2,7 @@
 *.d
 
 .vscode
+.env
 
 debug
 build
