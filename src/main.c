@@ -1,28 +1,36 @@
 #include "client/loadScreens.h"
 #include "sarahQL/createTable.h"
-#include <string.h>
 
-int main(int argc, char **argv) {
+void configureApp()
+{
     setIsOpen(TRUE);
 
     #ifdef __linux__
         configureConsole();
     #endif
-    
-    setBaseDbPath("../includes/server/database");
 
     initAppStateManager();
     loadScreens();
+}
 
-    while(isOpen())
-        runApp();
-
+void finishApp()
+{
     freeScreens();
     freeScreenButtons(); freeScreenInputs();
 
     #ifdef __linux__
         endwin();
     #endif
+
+}
+
+int main(int argc, char **argv) {
+    configureApp();
+
+    while(isOpen())
+        runApp();
+    
+    finishApp();
 
     return 0;
 }
