@@ -4,6 +4,14 @@
 #include "rafaGraphics/button.h"
 #include "rafaGraphics/input.h"
 
+/**
+ * @brief carrega as telas do app
+*/
 void loadScreens();
+
+/**
+ * @brief set to use client db
+*/
+void useClientDatabase();
 
 #endif

@@ -5,6 +5,9 @@
 #include "rafaGraphics/button.h"
 #include "client/views/auth.h"
 
+#include "client/client.h"
+#include "sarahQL/createTable.h"
+
 void changeScreenLogin()
 {
     changeScreen(renderLogin);
@@ -17,7 +20,16 @@ void changeScreenRegister()
 }
 
 void renderMenu()
-{    
+{
+    useClientDatabase();
+
+    createTable("cookies");
+
+    unloggedMenu();
+}
+
+void unloggedMenu()
+{
     Box *window = initScreen(1);
     
     unsigned short *windowCenter = getCenterPos(window, 10, TRUE, TRUE);

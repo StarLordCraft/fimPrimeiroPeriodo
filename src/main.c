@@ -1,4 +1,4 @@
-#include "client/loadScreens.h"
+#include "client/client.h"
 #include "server/api/api.h"
 
 void configureApp()
