@@ -10,7 +10,7 @@ void setBaseDbPath(char *dbPath)
 }
 
 
-void createBinaryFile(const char *filename) {
+void createTable(const char *filename) {
     char fullPath[256];
 
     snprintf(fullPath, sizeof(fullPath), "%s/%s.bin", baseDbPath, filename);
