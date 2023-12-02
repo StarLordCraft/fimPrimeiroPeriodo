@@ -8,8 +8,11 @@ typedef void (*RenderScreen)();
 
 typedef struct AppStateManager {
     RenderScreen *screens;
-    int numScreens;
-    int last;
+    RenderScreen *recentScreens;
+    unsigned short numScreens;
+    unsigned short current;
+    int recentTop;
+    bool reRender;
 } AppStateManager;
 
 extern AppStateManager *appStateManager;
@@ -25,16 +28,11 @@ Box *initScreen(unsigned short borderSize);
 void addScreen(RenderScreen screen);
 
 /**
- * @brief limpar coisas da tela anterior
-*/
-void resetScreen();
-
-/**
  * @brief define as telas a serem utilizadas no programa e retorna elas em um array
  * 
- * @return void * retorna um array de funções que desenham as telas 
+ * @return void 
 */
-AppStateManager *getScreens();
+void initAppStateManager();
 
 /**
  * @brief decorator pra funções de trocar a tela
@@ -42,11 +40,32 @@ AppStateManager *getScreens();
 void changeScreen(RenderScreen renderScreen);
 
 /**
+ * @brief adiciona uma tela pra pilha de telas de navegação
+ * @param screen tela a ser adicionada
+*/
+void pushRecentScreen(RenderScreen screen);
+
+/**
+ * @brief navega pra trás nas telas
+*/
+void backScreen();
+
+/**
  * @brief libera memoria alocada de um objeto RenderScreen
  * 
  * @param screens array de RenderScreen a ter memória liberada
  * @return void
 */
-void freeScreens(RenderScreen *screens);
+void freeScreens();
+
+/**
+ * @brief função pra rodar a aplicação
+*/
+void runApp();
+
+/**
+ * @brief tava bom demais pra ser vdd...
+*/
+void gambiarra();
 
 #endif

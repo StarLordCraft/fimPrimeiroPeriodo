@@ -4,9 +4,12 @@
 #include <string.h>
 #include "../standart.h"
 #include "./keys.h"
+#include <pthread.h> 
 
 /// @brief @section GLOBAL VARIABLES
 extern bool open;
+extern int threadCreateStatus;
+extern pthread_t renderThreadId;
 /// @endparblock
 
 /**
@@ -55,5 +58,10 @@ void renderText(unsigned short posX, unsigned short posY, const char *text);
  * @return bool - se deve ou não parar o programa
  */
 void handleEvents();
+
+/**
+ * @brief thread de rendering
+*/
+void* renderThreadFunction(void* arg);
 
 #endif
