@@ -1,5 +1,5 @@
 #include "client/loadScreens.h"
-#include "sarahQL/createTable.h"
+#include "server/api/api.h"
 
 void configureApp()
 {
@@ -9,14 +9,15 @@ void configureApp()
         configureConsole();
     #endif
 
+    initApi();
+
     initAppStateManager();
     loadScreens();
 }
 
 void finishApp()
 {
-    freeScreens();
-    freeScreenButtons(); freeScreenInputs();
+    freeScreens(); freeScreenButtons(); freeScreenInputs(); freeApi();
 
     #ifdef __linux__
         endwin();
