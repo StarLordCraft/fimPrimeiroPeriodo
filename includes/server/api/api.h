@@ -5,7 +5,7 @@
 #include <string.h>
 
 // Definição do tipo de ponteiro para função Method
-typedef void *(*Method)(void *);
+typedef void *(*Method)(void *request);
 
 // Estrutura representando um Controller
 typedef struct {
@@ -56,10 +56,7 @@ void useServerDb()
 void addController(Controller *controller)
 {
     Controller **newControllers = realloc(api->controllers, sizeof(Controller *) * (api->size + 1));
-    if (newControllers == NULL) {
-        // Tratamento de erro para falha de realocação
-        return;
-    }
+    if (newControllers == NULL)return;
     api->controllers = newControllers;
     api->controllers[api->size] = controller;
     ++api->size;
@@ -90,6 +87,8 @@ void createController(const char *route, Method GET, Method POST, Method PUT, Me
     newController->POST = POST;
     newController->PUT = PUT;
     newController->DELETE = DELETE;
+
+    addController(newController);
 }
 
 /**

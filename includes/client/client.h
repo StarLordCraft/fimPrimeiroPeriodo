@@ -14,4 +14,9 @@ void loadScreens();
 */
 void useClientDatabase();
 
+/**
+ * @brief verifica nos cookies se o usuário tem token de autenticação
+*/
+char *getAuthTokenCookie();
+
 #endif

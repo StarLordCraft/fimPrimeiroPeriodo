@@ -7,10 +7,6 @@
 #include "client/views/auth.h"
 #include "client/client.h"
 
-#include "sarahQL/createTable.h"
-
-#include "models/UserModel.h"
-
 void changeScreenLogin()
 {
     changeScreen(renderLogin);
@@ -41,8 +37,8 @@ void unloggedMenu()
 
 void renderMenu()
 {
-    useClientDatabase();
-
+    char *accessToken = getAuthTokenCookie();
+    
     unloggedMenu();
 }
 

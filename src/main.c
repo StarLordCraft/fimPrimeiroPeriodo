@@ -1,5 +1,5 @@
 #include "client/client.h"
-#include "server/api/api.h"
+#include "server/server.h"
 
 void configureApp()
 {
@@ -10,6 +10,7 @@ void configureApp()
     #endif
 
     initApi();
+    loadControllers();
 
     initAppStateManager();
     loadScreens();
