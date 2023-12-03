@@ -3,10 +3,13 @@
 
 #include "rafaGraphics/box.h"
 #include "rafaGraphics/button.h"
-#include "client/views/auth.h"
 
+#include "client/views/auth.h"
 #include "client/client.h"
+
 #include "sarahQL/createTable.h"
+
+#include "models/UserModel.h"
 
 void changeScreenLogin()
 {
@@ -17,15 +20,6 @@ void changeScreenLogin()
 void changeScreenRegister()
 {
     
-}
-
-void renderMenu()
-{
-    useClientDatabase();
-
-    createTable("cookies");
-
-    unloggedMenu();
 }
 
 void unloggedMenu()
@@ -43,6 +37,13 @@ void unloggedMenu()
     Button *Cadastrar = createButton(15, 5, windowCenter[0], (windowCenter[1] + Entrar->height + 2), "Cadastrar", changeScreenRegister);
     
     renderButton(Entrar); renderButton(Cadastrar);
+}
+
+void renderMenu()
+{
+    useClientDatabase();
+
+    unloggedMenu();
 }
 
 #endif
