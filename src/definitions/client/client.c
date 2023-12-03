@@ -1,5 +1,5 @@
 #include "client/client.h"
-#include "client/views/menu.h"
+#include "client/views/home.h"
 #include "client/views/auth.h"
 
 #include "sarahQL/createTable.h"

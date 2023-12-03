@@ -18,7 +18,7 @@ void changeScreenRegister()
     
 }
 
-void unloggedMenu()
+void unloggedHome()
 {
     Box *window = initScreen(1);
     
@@ -35,11 +35,11 @@ void unloggedMenu()
     renderButton(Entrar); renderButton(Cadastrar);
 }
 
-void renderMenu()
+void renderHome()
 {
     char *accessToken = getAuthTokenCookie();
     
-    unloggedMenu();
+    unloggedHome();
 }
 
 #endif
