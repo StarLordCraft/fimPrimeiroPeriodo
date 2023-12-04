@@ -7,6 +7,9 @@
 #include "client/views/auth.h"
 #include "client/client.h"
 
+#include "server/controllers/homeController.h"
+#include "models/UserModel.h"
+
 void changeScreenLogin()
 {
     changeScreen(renderLogin);
@@ -37,9 +40,13 @@ void unloggedHome()
 
 void renderHome()
 {
-    char *accessToken = getAuthTokenCookie();
-    
-    unloggedHome();
+    void *accessToken = getAuthTokenCookie();
+    Controller *tokenAuthController = findControllerByRoute("/auth/withtoken");
+
+    User *user = tokenAuthController->GET(accessToken);
+
+    if(!user)
+        unloggedHome();
 }
 
 #endif

@@ -1,17 +1,6 @@
-#ifndef PAYMENT_MODEL_H
-#define PAYMENT_MODEL_H
+#include "models/PaymentModel.h"
 
-#include "sarahQL/contentDescriptor.h"
-#include "sarahQL/where.h"
-
-typedef struct {
-    const char *payment_id;
-    const char *payer_id;
-    const char *receptor_id;
-    double value;
-}Payment;
-
-const char *payment_table = "payment";
+const char *payment_table = "payments";
 
 FieldDescriptor paymentFields[] = {
     {"payment_id", STRING, offsetof(Payment, payment_id)},
@@ -21,8 +10,6 @@ FieldDescriptor paymentFields[] = {
 };
 
 ContentDescriptor paymentSchema = {
-    userFields,
+    paymentFields,
     sizeof(Payment)
 };
-
-#endif
