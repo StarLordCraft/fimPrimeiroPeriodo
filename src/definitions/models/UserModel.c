@@ -20,16 +20,12 @@ SearchResult *paymentsToReceive(char *user_id)
 { 
     useServerDb();
 
-    void *voidUser_id = user_id;
-
-    return where(payment_table, sizeof(Payment), paymentSchema, "receptor_id", voidUser_id); 
+    return where(payment_table, sizeof(Payment), paymentSchema, "receptor_id", user_id); 
 }
 
 SearchResult *paymentsToPay(char *user_id)
 { 
     useServerDb();
-    
-    void *voidUser_id = user_id;
 
-    return where(payment_table, sizeof(Payment), paymentSchema, "payer_id", voidUser_id); 
+    return where(payment_table, sizeof(Payment), paymentSchema, "payer_id", user_id); 
 }

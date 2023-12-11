@@ -8,13 +8,14 @@ void loadScreens()
 {
     addScreen(renderHome);
     addScreen(renderLogin);
+    addScreen(renderRegister);
 
     pushRecentScreen(appStateManager->screens[appStateManager->current]);
 }
 
 void useClientDatabase()
 {
-    setBaseDbPath("./includes/client/database");
+    setBaseDbPath("../includes/client/database");
 }
 
 char *getAuthTokenCookie()

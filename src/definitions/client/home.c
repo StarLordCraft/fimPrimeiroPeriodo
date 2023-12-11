@@ -17,7 +17,7 @@ void changeScreenLogin()
 
 void changeScreenRegister()
 {
-    
+    changeScreen(renderRegister);
 }
 
 void unloggedHome()

@@ -1,13 +1,19 @@
 #ifndef AUTH_H
 #define AUTH_H
 
-typedef struct {
+typedef struct
+{
+    char *username;
     char *email;
     char *senha;
-}LoginData;
+} AuthData;
+
+void signin();
 
 void login();
 
 void renderLogin();
+
+void renderRegister();
 
 #endif

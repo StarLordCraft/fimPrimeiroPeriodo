@@ -54,6 +54,7 @@ void changeScreen(RenderScreen renderScreen) {
 }
 
 void backScreen() {
+    freeScreenButtons(); freeScreenInputs();
     if (appStateManager->recentTop <= 1) return; 
 
     --appStateManager->recentTop; 

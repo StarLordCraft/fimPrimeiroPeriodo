@@ -81,6 +81,8 @@ SearchResult *where(const char *fileName, size_t elementSize, ContentDescriptor 
         }
     }
 
+    
+
     free(element);
     fclose(file);
 
