@@ -42,7 +42,7 @@ void createBorder(Box *box, unsigned short borderSize, const char *border);
  * horizontal e vertical.
  *
  * @param boxRelative O contêiner pai.
- * @param textLength O tamanho do elemento filho a ser centralizado.
+ * @param childrenLenght O tamanho do elemento filho a ser centralizado.
  * @param horizontal Define se o elemento deve ser centralizado horizontalmente.
  * @param vertical Define se o elemento deve ser centralizado verticalmente.
  *

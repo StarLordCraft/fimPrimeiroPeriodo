@@ -1,19 +1,13 @@
 #ifndef AUTH_H
 #define AUTH_H
 
-#include "rafaGraphics/button.h"
-#include "rafaGraphics/box.h"
-#include "rafaGraphics/screens.h"
-#include "rafaGraphics/input.h"
+typedef struct {
+    char *email;
+    char *senha;
+}LoginData;
 
-void renderLogin()
-{
-    Box *window = initScreen(1);
-    Input *Email = createInput(64, 10, 10, "Email:", "email", "email");
-    Input *Senha = createInput(64, 10, 15, "Senha:", "password", "password");
+void login();
 
-    renderInput(Email); renderInput(Senha);
-    gambiarra();
-}
+void renderLogin();
 
 #endif
