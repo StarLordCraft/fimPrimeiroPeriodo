@@ -19,15 +19,13 @@
 
 void signin()
 {
-    char *username = screenInputs[0].text; char *email = screenInputs[1].text; char *senha = screenInputs[2].text;
-
     AuthData *registerData = (AuthData *) malloc(sizeof(AuthData));
 
-    registerData->username = strdup(username);
-    registerData->email = strdup(email);
-    registerData->senha = strdup(senha);
+    registerData->username = strdup(findInputByValue("username").text);
+    registerData->email = strdup(findInputByValue("email").text);
+    registerData->senha = strdup(findInputByValue("password").text);
     
-    User *user = (User *) findControllerByRoute("/home")->POST(registerData);
+    User *user = (User *) (findControllerByRoute("/auth/withtoken"))->POST(registerData);
 
     if(!user)
     {
@@ -45,6 +43,7 @@ void signin()
         
             size_t tokenLen = strlen(user->auth_token);
             fwrite(user->auth_token, 1, tokenLen, file);
+
             
             fclose(file);
         }
@@ -59,10 +58,11 @@ void login()
 
     AuthData *loginData = (AuthData *) malloc(sizeof(AuthData));
 
+
     loginData->email = strdup(email);
     loginData->senha = strdup(senha);
     
-    User *user = findControllerByRoute("/home")->PUT(loginData);
+    User *user = (User *) findControllerByRoute("/home")->POST(loginData);
     if(!user){
 
     }else {
@@ -107,13 +107,15 @@ void renderRegister()
     Box *window = initScreen(1);
 
 
-    Input *username = createInput(20, 10, 5, "Username:", "text", "text");
+    gambiarra();
+
     Input *Email = createInput(64, 10, 10, "Email:", "email", "email");
+    Input *username = createInput(20, 10, 5, "Username:", "username", "email");
     Input *Senha = createInput(64, 10, 15, "Senha:", "password", "password");
+
     Button *registrar = createButton(14, 5, getCenterPos(window, 7, true, false)[0], 20, "Registrar", signin);
 
     renderInput(username); renderInput(Email); renderInput(Senha);
     renderButton(registrar);
-    
-    gambiarra();
+
 }

@@ -3,6 +3,7 @@
 
 void configureApp()
 {
+    
     setIsOpen(TRUE);
 
     #ifdef __linux__

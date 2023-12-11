@@ -6,8 +6,6 @@
 
 #include "server/server.h"
 
-char *generateToken(int length);
-
 void *homeGET(void *request);
 
 void *homePOST(void *request);

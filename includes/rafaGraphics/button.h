@@ -15,8 +15,9 @@ typedef struct
     unsigned short startPointY;
 
     const char *text;
+    void *userData; 
 
-    void (*onClick)();
+    void (*onClick)(void *call);
 } Button;
 
 /// @section Global Variables
@@ -63,6 +64,9 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
  * @return void
  */
 void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mouseY);
+
+void buttonWithUserData(Button *button, void *userData);
+
 /**
  * @brief Reseta o array de botões para receber os botões de uma outra tela.
  *

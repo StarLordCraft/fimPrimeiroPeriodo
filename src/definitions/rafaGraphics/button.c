@@ -67,6 +67,7 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
 
     Button *newButton = (Button *)malloc(sizeof(Button));
 
+    newButton->userData = NULL;
     newButton->width = width;
     newButton->height = height;
     newButton->startPointX = startPointX;
@@ -79,6 +80,11 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
     addButtonToScreen(newButton);
 
     return newButton;
+}
+
+void buttonWithUserData(Button *button, void *userData)
+{
+    button->userData = userData;
 }
 
 /**
@@ -94,7 +100,7 @@ void handleButtonEvent(Button *button, unsigned short mouseX, unsigned short mou
     if (mouseX >= button->startPointX && mouseX < (button->startPointX + button->width) &&
         mouseY >= button->startPointY && mouseY < (button->startPointY + button->height))
         if (button->onClick)
-            button->onClick();
+            button->onClick(button->userData);
 }
 
 /**

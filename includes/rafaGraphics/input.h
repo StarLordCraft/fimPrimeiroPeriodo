@@ -99,6 +99,11 @@ void handleInputClickEvent(Input *input, unsigned short mouseX, unsigned short m
 void handleInputText(unsigned short key);
 
 /**
+ * Retorna o input com aquele value
+*/
+Input findInputByValue(char *value);
+
+/**
  * @brief Reseta o array de inputs para receber os inputs de uma outra tela.
  *
  * @return void

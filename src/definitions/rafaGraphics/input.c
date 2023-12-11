@@ -191,7 +191,7 @@ void handleInputText(unsigned short key)
                 else
                 {
                     if ((numScreenButtons > 0))
-                        screenButtons[numScreenButtons - 1].onClick();
+                        screenButtons[numScreenButtons - 1].onClick(screenButtons[numScreenButtons - 1].userData);
                 }
                 break;
             }
@@ -244,6 +244,13 @@ void handleInputText(unsigned short key)
             moveCursor(inputFocused, inputFocused->cursor + 1);
     }
 }
+
+Input findInputByValue(char *value)
+{
+    for (int i = 0; i < numScreenInputs; ++i)
+        if(strcmp(screenInputs[i].value, value) == 0)return screenInputs[i];
+}
+
 
 /**
  * @brief Reseta o array de inputs para receber os inputs de uma outra tela.

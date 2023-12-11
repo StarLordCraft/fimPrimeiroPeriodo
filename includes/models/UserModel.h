@@ -6,12 +6,12 @@
 #include "server/server.h"
 
 typedef struct{
-    char user_id[64];
-    char auth_token[64];
-    char username[30];
-    char email[64];
-    char password[64];
-    char role[30];
+    char user_id[65];
+    char auth_token[65];
+    char username[31];
+    char email[65];
+    char password[65];
+    char role[31];
 }User;
 
 extern const char *user_table;

@@ -50,7 +50,7 @@ void configureConsole();
  *
  * @return void
  */
-void renderText(unsigned short posX, unsigned short posY, const char *text);
+void renderText(unsigned short posX, unsigned short posY, char *text);
 
 /**
  * @brief recebe eventos e computa eles seja clique input de teclado...

@@ -83,7 +83,7 @@ void configureConsole()
  *
  * @return void
  */
-void renderText(unsigned short posX, unsigned short posY, const char *text)
+void renderText(unsigned short posX, unsigned short posY, char *text)
 {
 #ifdef _WIN32
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
