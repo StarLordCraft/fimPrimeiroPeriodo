@@ -53,10 +53,12 @@ void *homePOST(void *request)
     else
     {
         User *newUser = (User *)malloc(sizeof(User));
+        
+        strcpy(newUser->username, req->username);
         strcpy(newUser->email, req->email);
         strcpy(newUser->password, req->senha);
-        newUser->user_id = generateToken(64);
-        newUser->auth_token = generateToken(64);
+        strcpy(newUser->user_id, generateToken(64));
+        strcpy(newUser->auth_token, generateToken(64));
 
         insert(newUser, user_table, sizeof(User));
 

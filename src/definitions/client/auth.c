@@ -19,10 +19,11 @@
 
 void signin()
 {
-    char *email = screenInputs[0].text; char *senha = screenInputs[1].text;
+    char *username = screenInputs[0].text; char *email = screenInputs[1].text; char *senha = screenInputs[2].text;
 
     AuthData *registerData = (AuthData *) malloc(sizeof(AuthData));
 
+    registerData->username = strdup(username);
     registerData->email = strdup(email);
     registerData->senha = strdup(senha);
     
@@ -105,11 +106,13 @@ void renderRegister()
 {
     Box *window = initScreen(1);
 
-    Input *Email = createInput(64, 10, 5, "Email:", "email", "email");
-    Input *Senha = createInput(64, 10, 10, "Senha:", "password", "password");
-    Button *registrar = createButton(14, 5, getCenterPos(window, 7, true, false)[0], 15, "Registrar", signin);
 
-    renderInput(Email); renderInput(Senha);
+    Input *username = createInput(20, 10, 5, "Username:", "text", "text");
+    Input *Email = createInput(64, 10, 10, "Email:", "email", "email");
+    Input *Senha = createInput(64, 10, 15, "Senha:", "password", "password");
+    Button *registrar = createButton(14, 5, getCenterPos(window, 7, true, false)[0], 20, "Registrar", signin);
+
+    renderInput(username); renderInput(Email); renderInput(Senha);
     renderButton(registrar);
     
     gambiarra();

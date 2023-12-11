@@ -42,6 +42,8 @@ void pushRecentScreen(RenderScreen screen) {
 }
 
 void changeScreen(RenderScreen renderScreen) {
+    freeScreenButtons(); freeScreenInputs();
+    
     for(int i = 0; i < appStateManager->numScreens; ++i)
         if(appStateManager->screens[i] == renderScreen){
             appStateManager->current = i;
@@ -49,8 +51,6 @@ void changeScreen(RenderScreen renderScreen) {
         };
 
     pushRecentScreen(appStateManager->screens[appStateManager->current]);
-
-    freeScreenButtons(); freeScreenInputs();
 }
 
 void backScreen() {
