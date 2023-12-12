@@ -21,9 +21,17 @@ void signin()
 {
     AuthData *registerData = (AuthData *) malloc(sizeof(AuthData));
 
-    registerData->username = strdup(findInputByValue("username").text);
-    registerData->email = strdup(findInputByValue("email").text);
-    registerData->senha = strdup(findInputByValue("password").text);
+    char usernameInput[31];
+    char emailInput[50];
+    char senhaInput[50];
+
+    strcpy(usernameInput, findInputByValue("username").text);
+    strcpy(emailInput, findInputByValue("email").text);
+    strcpy(senhaInput, findInputByValue("password").text);
+
+    registerData->username = strdup(usernameInput);
+    registerData->email = strdup(emailInput);
+    registerData->senha = strdup(senhaInput);
     
     User *user = (User *) (findControllerByRoute("/auth/withtoken"))->POST(registerData);
 
@@ -47,9 +55,9 @@ void signin()
             
             fclose(file);
         }
-        
-        changeScreen(renderHome);
     }
+    changeScreen(renderHome);
+    free(user); free(registerData);
 }
 
 void login()
@@ -85,7 +93,7 @@ void login()
         
         changeScreen(renderHome);
     }
-    
+    free(user); free(loginData);
 }
 
 void renderLogin()

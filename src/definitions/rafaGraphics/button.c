@@ -55,7 +55,7 @@ void renderButton(Button *button)
  * @return Button retorna um elemento de interação renderizável na tela
  */
 Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX,
-                     unsigned short startPointY, const char *label, void (*callBack)(void))
+                     unsigned short startPointY, const char *label, void (*callBack)(void *))
 {
     if (screenButtons)
         for (int i = 0; i < numScreenButtons; ++i)
@@ -65,7 +65,7 @@ Button *createButton(unsigned short width, unsigned short height, unsigned short
                 return &screenButtons[i];
             }
 
-    Button *newButton = (Button *)malloc(sizeof(Button));
+    Button *newButton = ((Button *)malloc(sizeof(Button)));
 
     newButton->userData = NULL;
     newButton->width = width;

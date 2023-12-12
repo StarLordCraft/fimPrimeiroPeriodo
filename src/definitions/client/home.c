@@ -14,6 +14,7 @@
 
 
 User *selectedUser = NULL;
+User *user = NULL;
 
 void changeScreenLogin()
 {
@@ -48,8 +49,12 @@ void logout()
 }
 
 
-void send(void *user){
-    selectedUser = (User *) user;
+void send(void *user)
+{
+    if (user) {
+        selectedUser = (User *)user;
+        changeScreen(renderMoneySender);
+    }
 }
 
 void unloggedHome()
@@ -90,7 +95,9 @@ void createButtonGrid(SearchResult *users, Box *div, unsigned short btnWidth, un
         }
 
         Button *userBtn = createButton(btnWidth, btnHeight, x, y, ((User *)users->matches[i])->username, send);
-        buttonWithUserData(userBtn, users->matches[i]);
+        userBtn->userData = malloc(sizeof(User));
+        memcpy(userBtn->userData, users->matches[i], sizeof(User));
+    
         renderButton(userBtn);
 
         x += btnWidth + spaceBetween;
@@ -121,10 +128,18 @@ void renderHome()
     void *accessToken = getAuthTokenCookie();
     Controller *tokenAuthController = findControllerByRoute("/auth/withtoken");
 
-    User *user = (User *)tokenAuthController->GET(accessToken);
+    user = (User *)tokenAuthController->GET(accessToken);
+    
+    if(!selectedUser)
+        selectedUser = (User *) malloc(sizeof(User));
 
     if (!user)
         unloggedHome();
     else
         loggedHome(user);
+}
+
+User *getSelectedUser()
+{
+    return selectedUser;
 }

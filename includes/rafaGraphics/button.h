@@ -53,7 +53,7 @@ void renderButton(Button *button);
  * @return Button retorna um elemento de interação renderizável na tela
  */
 Button *createButton(unsigned short width, unsigned short height, unsigned short startPointX,
-                     unsigned short startPointY, const char *label, void (*callBack)(void));
+                     unsigned short startPointY, const char *label, void (*callBack)(void *));
 
 /**
  * @brief Testa se um botão foi clicado

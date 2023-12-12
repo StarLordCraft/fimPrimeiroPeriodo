@@ -5,9 +5,8 @@
 #include "sarahQL/where.h"
 
 typedef struct {
-    const char *payment_id;
-    const char *payer_id;
-    const char *receptor_id;
+    char payer_id[65];
+    char receptor_id[65];
     double value;
 }Payment;
 

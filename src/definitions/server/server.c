@@ -4,6 +4,7 @@
 #include "server/server.h"
 #include "server/controllers/homeController.h"
 #include "server/controllers/tokenAuthController.h"
+#include "server/controllers/paymentController.h"
 
 #include "sarahQL/createTable.h"
 
@@ -13,6 +14,7 @@ void loadControllers()
 {
     initHomeController();
     initTokenAuthController();
+    initPaymentController();
 }
 
 void initApi()

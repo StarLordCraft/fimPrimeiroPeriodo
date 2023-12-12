@@ -8,6 +8,7 @@ void loadScreens()
 {
     addScreen(renderHome); addScreen(unloggedHome); addScreen(loggedHome);
     addScreen(renderLogin); addScreen(renderRegister);
+    addScreen(renderMoneySender);
 
     pushRecentScreen(appStateManager->screens[appStateManager->current]);
 }

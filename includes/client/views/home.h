@@ -4,6 +4,7 @@
 #include "models/UserModel.h"
 
 extern User *selectedUser;
+extern User *user;
 
 void changeScreenLogin();
 
@@ -14,5 +15,9 @@ void loggedHome();
 void unloggedHome();
 
 void renderHome();
+
+User *getSelectedUser();
+
+void renderMoneySender();
 
 #endif
