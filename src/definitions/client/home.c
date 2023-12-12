@@ -6,9 +6,9 @@
 #include "rafaGraphics/button.h"
 
 #include "client/views/auth.h"
+#include "client/views/moneySender.h"
+#include "client/views/extrato.h"
 #include "client/client.h"
-
-#include "server/controllers/homeController.h"
 
 #include "models/UserModel.h"
 
@@ -24,6 +24,12 @@ void changeScreenLogin()
 void changeScreenRegister()
 {
     changeScreen(renderRegister);
+}
+
+void changeScreenExtrato()
+{
+    if(user)
+        changeScreen(renderExtrato);
 }
 
 void logout()
@@ -113,7 +119,7 @@ void loggedHome(User *user)
     Box *div = createBox(window->width - 10, window->height - 10, 5, 9);
     createBorder(div, 1, "#");
 
-    Button *extrato = createButton(15, 5, 10, 3, "Extrato", NULL);
+    Button *extrato = createButton(15, 5, 10, 3, "Extrato", changeScreenExtrato);
     Button *sair = createButton(15, 5, window->width - 21, 3, "Sair", logout);
 
     SearchResult *users = (SearchResult *) findControllerByRoute("/home")->GET(NULL);

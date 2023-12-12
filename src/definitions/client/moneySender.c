@@ -18,7 +18,8 @@ void sendMoney()
     strcpy(payment->receptor_id, selectedUser->user_id);
     strcpy(payment->payer_id, user->user_id);
 
-    char *str = findInputByValue("quantia").text;
+    char str[5];
+    strcpy(str, findInputByValue("quantia").text);
     char *endptr;
     payment->value = strtod(str, &endptr);
 
@@ -50,7 +51,7 @@ void renderMoneySender() {
 
     Button *enviar = createButton(15, 5, windowCenter[0] - 5, 21, " Enviar", sendMoney);
 
-    renderInput(Quantia);
-    renderButton(enviar);
-    gambiarra();
+    renderInput(Quantia); renderButton(enviar);
+    
+    gambiarra(); gambiarra();
 }

@@ -18,17 +18,18 @@ void *homePOST(void *request)
 {
     AuthData *req = (AuthData *)request;
 
-    User *user = where(user_table, sizeof(User), userSchema, "email", req->email)->matches[0];
+    SearchResult *result = where(user_table, sizeof(User), userSchema, "email", req->email);
 
-    if (!user)
-        return NULL;
-    else
+    User *existingUser = NULL;
+
+    if (result && result->matchCount > 0)
+        existingUser = result->matches[0];
+    if (existingUser)
     {
-        if (strcmp(user->password, req->senha) == 0)
-            return user;
-        else
-            return NULL;
+        if (strcmp(existingUser->password, req->senha) == 0)
+            return existingUser;
     }
+    return NULL;
 }
 
 void *homePUT(void *request)

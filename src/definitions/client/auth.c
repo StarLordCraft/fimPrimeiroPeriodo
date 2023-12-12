@@ -22,8 +22,8 @@ void signin()
     AuthData *registerData = (AuthData *) malloc(sizeof(AuthData));
 
     char usernameInput[31];
-    char emailInput[50];
-    char senhaInput[50];
+    char emailInput[65];
+    char senhaInput[65];
 
     strcpy(usernameInput, findInputByValue("username").text);
     strcpy(emailInput, findInputByValue("email").text);
@@ -62,18 +62,22 @@ void signin()
 
 void login()
 {
-    char *email = screenInputs[0].text; char *senha = screenInputs[1].text;
-
     AuthData *loginData = (AuthData *) malloc(sizeof(AuthData));
 
+    char emailInput[65];
+    char senhaInput[65];
 
-    loginData->email = strdup(email);
-    loginData->senha = strdup(senha);
-    
+    strcpy(emailInput, findInputByValue("email").text);
+    strcpy(senhaInput, findInputByValue("password").text);
+
+    loginData->email = strdup(emailInput);
+    loginData->senha = strdup(senhaInput);
+ 
     User *user = (User *) findControllerByRoute("/home")->POST(loginData);
-    if(!user){
+    if(!user)
+    {
 
-    }else {
+    }else{
         useClientDatabase();
 
         char fullPath[256];
@@ -90,9 +94,8 @@ void login()
             
             fclose(file);
         }
-        
-        changeScreen(renderHome);
     }
+    changeScreen(renderHome);
     free(user); free(loginData);
 }
 

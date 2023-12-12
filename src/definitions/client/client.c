@@ -1,6 +1,8 @@
 #include "client/client.h"
 #include "client/views/home.h"
 #include "client/views/auth.h"
+#include "client/views/moneySender.h"
+#include "client/views/extrato.h"
 
 #include "sarahQL/createTable.h"
 
@@ -8,7 +10,7 @@ void loadScreens()
 {
     addScreen(renderHome); addScreen(unloggedHome); addScreen(loggedHome);
     addScreen(renderLogin); addScreen(renderRegister);
-    addScreen(renderMoneySender);
+    addScreen(renderMoneySender); addScreen(renderExtrato);
 
     pushRecentScreen(appStateManager->screens[appStateManager->current]);
 }
