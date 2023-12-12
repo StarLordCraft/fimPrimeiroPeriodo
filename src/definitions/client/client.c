@@ -17,7 +17,7 @@ void loadScreens()
 
 void useClientDatabase()
 {
-    setBaseDbPath("../includes/client/database");
+    setBaseDbPath("./includes/client/database");
 }
 
 char *getAuthTokenCookie()

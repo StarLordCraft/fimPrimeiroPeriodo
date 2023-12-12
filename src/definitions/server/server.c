@@ -26,7 +26,7 @@ void initApi()
 
 void useServerDb()
 {
-    setBaseDbPath("../includes/server/database");
+    setBaseDbPath("./includes/server/database");
 }
 
 
